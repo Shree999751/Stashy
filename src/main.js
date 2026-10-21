@@ -1,6 +1,6 @@
 // ==========================================================================
 // STASHY CONTROLLER
-// Pixel-accurate implementation of STIKI desktop application
+// Pixel-accurate implementation of Stashy desktop application
 // ==========================================================================
 
 const isTauri = typeof window !== 'undefined' && (window.__TAURI_INTERNALS__ || window.__TAURI__);

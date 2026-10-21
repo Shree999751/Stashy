@@ -1,6 +1,6 @@
 /* ==========================================================================
    STASHY — "Notes that live on the edge of your screen"
-   Pixel-perfect implementation of STIKI desktop application
+   Pixel-perfect implementation of Stashy desktop application
    ========================================================================== */
 
 :root {
@@ -17,7 +17,7 @@
   --text-muted: #64748b;
   --text-light: #94a3b8;
 
-  /* STIKI 5 Core Signature Colors */
+  /* Stashy 5 Core Signature Colors */
   --c-yellow-bg: #fef08a;
   --c-yellow-tab: #fde047;
   --c-yellow-text: #713f12;
@@ -424,7 +424,7 @@ html, body {
   transform: translateY(-14px);
 }
 
-/* Tab Colors matching STIKI */
+/* Tab Colors matching Stashy */
 .dock-tab-yellow  { background: var(--c-yellow-tab); color: var(--c-yellow-text); }
 .dock-tab-green   { background: var(--c-green-tab);  color: var(--c-green-text); }
 .dock-tab-purple  { background: var(--c-purple-tab); color: var(--c-purple-text); }
