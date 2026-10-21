@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stashy — Stash your thought</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Patrick+Hand&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="dock-edge-right-top theme-light font-handwritten">
+    <div id="desktopCanvas" class="desktop-canvas">
+
+      <!-- ============================================================
+           1. SCREEN EDGE DOCK (Hugs screen boundary at 8 possible positions)
+           ============================================================ -->
+      <nav id="edgeDock" class="edge-dock" aria-label="Stashy Edge Dock">
+        <!-- Top Dock Toggle Handle [|||] with "HOLD TO DRAG" tooltip -->
+        <div class="dock-handle-wrap">
+          <button id="dockMenuToggle" class="dock-handle-btn" title="Toggle Board / Drag Dock">
+            <span class="handle-bar"></span>
+            <span class="handle-bar"></span>
+            <span class="handle-bar"></span>
+          </button>
+          <div class="dock-tooltip">HOLD TO DRAG</div>
+        </div>
+
+        <!-- Stack of Horizontal Edge Tabs sticking out from screen edge -->
+        <div id="dockTabsStack" class="dock-tabs-stack">
+          <!-- Dynamically populated horizontal tabs with truncated uppercase titles -->
+        </div>
+
+        <!-- Bottom Controls: Chevron Down + Plus Button -->
+        <div class="dock-bottom-controls">
+          <button id="dockScrollDownBtn" class="dock-icon-btn chevron-btn" title="Scroll Tabs">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <button id="dockQuickAddBtn" class="dock-circle-add-btn" title="Quick Stash (+)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </button>
+        </div>
+      </nav>
+
+      <!-- ============================================================
+           2. MAIN BOARD WINDOW (Full Stashy Desktop App)
+           ============================================================ -->
+      <section id="boardWindow" class="board-window">
+        <!-- Left Sidebar -->
+        <aside class="board-sidebar">
+          <!-- App Header -->
+          <div class="sidebar-brand" id="brandHomeBtn" role="button" tabindex="0">
+            <div class="brand-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="#ef4444">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            </div>
+            <div class="brand-text">
+              <div class="brand-title">Dock Port</div>
+              <div class="brand-version">v0.1.24</div>
+            </div>
+          </div>
+
+          <!-- Navigation Groups -->
+          <nav class="sidebar-nav">
+            <div class="nav-section-title">MAIN</div>
+            <button class="nav-item active" data-view="all-notes">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+              <span>All notes</span>
+            </button>
+            <button class="nav-item" data-view="archived">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
+              <span>Archived</span>
+            </button>
+            <button class="nav-item" data-view="pomodoro">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <span>Pomodoro</span>
+            </button>
+
+            <!-- Custom / Preferences Collapsible Section -->
+            <div class="nav-section-title section-collapsible" id="customNavToggle">
+              <span>CUSTOM</span>
+              <svg class="chevron-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            <div id="customNavList" class="custom-nav-list">
+              <button class="nav-item" data-view="dock-position">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+                <span>Dock position</span>
+              </button>
+              <button class="nav-item" data-view="license">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7.5" cy="15.5" r="5.5"></circle><path d="m21 2-9.6 9.6"></path><path d="m15.5 7.5 3 3"></path></svg>
+                <span>License</span>
+              </button>
+              <button class="nav-item" data-view="sync">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path><path d="M3 21v-5h5"></path></svg>
+                <span>Sync</span>
+              </button>
+              <button class="nav-item" data-view="set-labels">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                <span>Set labels</span>
+              </button>
+              <button class="nav-item" data-view="font">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
+                <span>Font</span>
+              </button>
+              <button class="nav-item" data-view="contact">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                <span>Contact</span>
+              </button>
+            </div>
+          </nav>
+
+          <!-- Sidebar Bottom Add Note -->
+          <div class="sidebar-footer">
+            <button id="sidebarAddNoteBtn" class="sidebar-add-btn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <span>Add a Note</span>
+            </button>
+          </div>
+        </aside>
+
+        <!-- Right Main Content Canvas -->
+        <main class="board-main-area">
+          <!-- Top Breadcrumb & Window Controls Bar -->
+          <header class="board-topbar">
+            <div class="topbar-breadcrumbs" id="topbarBreadcrumbs">
+              <span class="crumb-back-icon">‹</span>
+              <span class="crumb-home" id="crumbHomeLink">Home</span>
+              <span class="crumb-slash">/</span>
+              <span class="crumb-current" id="crumbCurrentView">All notes</span>
+            </div>
+
+            <div class="window-controls">
+              <button id="winMinBtn" class="win-btn" title="Minimize">—</button>
+              <button id="winMaxBtn" class="win-btn" title="Maximize">□</button>
+              <button id="winCloseBtn" class="win-btn win-close" title="Close Window">✕</button>
+            </div>
+          </header>
+
+          <!-- ============================================================
+               VIEW 1: ALL NOTES
+               ============================================================ -->
+          <div id="viewAllNotes" class="view-panel active">
+            <!-- Search & Filter Toolbar -->
+            <div class="board-toolbar">
+              <div class="search-input-wrap">
+                <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="boardSearchInput" placeholder="Search a note..." autocomplete="off" />
+              </div>
+
+              <div class="toolbar-actions">
+                <!-- Filter Dropdown -->
+                <div class="dropdown-wrap">
+                  <button id="filterBtn" class="tool-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                    <span>Filters</span>
+                  </button>
+                  <div id="filterMenu" class="dropdown-menu hidden">
+                    <div class="dropdown-header">Filter by Label</div>
+                    <button class="dropdown-item active" data-filter="all">All Notes</button>
+                    <button class="dropdown-item" data-filter="yellow"><span class="filter-dot color-dot-yellow"></span><span class="filter-lbl-yellow">In Progress</span></button>
+                    <button class="dropdown-item" data-filter="green"><span class="filter-dot color-dot-green"></span><span class="filter-lbl-green">Almost There</span></button>
+                    <button class="dropdown-item" data-filter="purple"><span class="filter-dot color-dot-purple"></span><span class="filter-lbl-purple">You can do it.</span></button>
+                    <button class="dropdown-item" data-filter="blue"><span class="filter-dot color-dot-blue"></span><span class="filter-lbl-blue">Next Steps</span></button>
+                    <button class="dropdown-item" data-filter="red"><span class="filter-dot color-dot-red"></span><span class="filter-lbl-red">FAAAAAAH</span></button>
+                    <button class="dropdown-item" data-filter="dark"><span class="filter-dot color-dot-dark"></span><span class="filter-lbl-dark">CLI / Terminal</span></button>
+                  </div>
+                </div>
+
+                <!-- View Layout Toggles: List vs Grid -->
+                <div class="layout-toggles">
+                  <button id="viewListBtn" class="view-btn" title="List View">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                  </button>
+                  <button id="viewGridBtn" class="view-btn active" title="Grid View">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Notes Grid View (3 columns of pastel cards) -->
+            <div id="notesGrid" class="notes-grid"></div>
+
+            <!-- Notes List View (horizontal colored rows matching Frame 8) -->
+            <div id="notesList" class="notes-list hidden"></div>
+          </div>
+
+          <!-- ============================================================
+               VIEW 2: ARCHIVED NOTES
+               ============================================================ -->
+          <div id="viewArchived" class="view-panel">
+            <div class="view-inner-header">
+              <h2>Archived</h2>
+              <p>Notes you've archived. Restore them or permanently delete.</p>
+            </div>
+            <div id="archivedNotesContainer" class="notes-grid"></div>
+            <div id="archivedEmptyState" class="empty-state-wrap hidden">
+              <div class="empty-state-icon">🗄️</div>
+              <p>No archived notes yet.</p>
+            </div>
+          </div>
+
+          <!-- ============================================================
+               VIEW 3: POMODORO (Frame 11 & 14)
+               ============================================================ -->
+          <div id="viewPomodoro" class="view-panel">
+            <div class="pomo-page-card">
+              <div class="pomo-page-top">
+                <div class="pomo-page-headings">
+                  <h2>Pomodoro</h2>
+                  <p>Set a focus timer with breaks — or run a plain stopwatch while you work.</p>
+                </div>
+                <div class="pomo-mode-switch">
+                  <button id="pomoModeTimerBtn" class="mode-pill-btn active">Timer</button>
+                  <button id="pomoModeStopwatchBtn" class="mode-pill-btn">Stopwatch</button>
+                </div>
+              </div>
+
+              <!-- Mode A: Timer -->
+              <div id="pomoTimerContainer" class="pomo-display-panel">
+                <div class="pomo-session-title-wrap">
+                  <span id="pomoSessionName" class="pomo-session-title">Focus session</span>
+                  <button id="pomoEditNameBtn" class="pomo-edit-icon" title="Edit session name">✎</button>
+                </div>
+                <div id="pomoMainClock" class="pomo-big-digits">25:00</div>
+                <div class="pomo-pagination-dots">
+                  <button id="pomoPrevSessionBtn" class="dot-nav-arrow">‹</button>
+                  <span class="pomo-dot active"></span>
+                  <button id="pomoNextSessionBtn" class="dot-nav-arrow">›</button>
+                </div>
+                <button id="pomoTogglePlayBtn" class="pomo-play-btn" title="Start/Pause">
+                  <svg id="pomoPlayIcon" width="24" height="24" viewBox="0 0 24 24" fill="#059669"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
+                  <svg id="pomoPauseIcon" class="hidden" width="24" height="24" viewBox="0 0 24 24" fill="#059669"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                </button>
+                <div id="pomoSessionFooterText" class="pomo-session-status-text">FOCUS · SESSION 1 OF 1</div>
+
+                <div class="pomo-config-row">
+                  <div class="pomo-input-group">
+                    <label>Focus</label>
+                    <input type="number" id="pomoFocusInput" min="1" max="120" value="25" />
+                    <span>min</span>
+                  </div>
+                  <div class="pomo-input-group">
+                    <label>Break</label>
+                    <input type="number" id="pomoBreakInput" min="1" max="60" value="5" />
+                    <span>min</span>
+                  </div>
+                  <div class="pomo-input-group">
+                    <label>Sessions</label>
+                    <input type="number" id="pomoSessionsInput" min="1" max="10" value="1" />
+                    <span>per cycle</span>
+                  </div>
+                </div>
+                <div class="pomo-bottom-note">The timer flips between focus and break on its own and beeps when a session ends. Your setup is remembered on this device.</div>
+              </div>
+
+              <!-- Mode B: Stopwatch -->
+              <div id="pomoStopwatchContainer" class="pomo-display-panel hidden">
+                <div class="pomo-stopwatch-top-actions">
+                  <button id="stopwatchResetBtn" class="stopwatch-icon-btn" title="Reset">↺</button>
+                </div>
+                <div class="pomo-session-title">Stopwatch</div>
+                <div id="stopwatchClock" class="pomo-big-digits">00:00<span class="ms-digits">.00</span></div>
+                <button id="stopwatchToggleBtn" class="pomo-play-btn" title="Start / Pause">
+                  <svg id="stopwatchPlayIcon" width="24" height="24" viewBox="0 0 24 24" fill="#059669"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
+                  <svg id="stopwatchPauseIcon" class="hidden" width="24" height="24" viewBox="0 0 24 24" fill="#059669"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                </button>
+                <div id="stopwatchStatusText" class="pomo-session-status-text">TAP START TO COUNT UP</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================================================
+               VIEW 4: DOCK POSITION (Frame 18 & 21)
+               ============================================================ -->
+          <div id="viewDockPosition" class="view-panel">
+            <div class="view-inner-header">
+              <h2>Dock position</h2>
+              <p>Choose where the dock sits on your screen. You can also drag it by its grip.</p>
+            </div>
+
+            <div class="dock-positions-grid">
+              <button class="monitor-card" data-pos="left-top">
+                <div class="monitor-frame">
+                  <span class="dock-indicator ind-left-top"></span>
+                </div>
+                <span class="monitor-label">Left · Top</span>
+              </button>
+
+              <button class="monitor-card" data-pos="left-bottom">
+                <div class="monitor-frame">
+                  <span class="dock-indicator ind-left-bottom"></span>
+                </div>
+                <span class="monitor-label">Left · Bottom</span>
+              </button>
+
+              <button class="monitor-card active" data-pos="right-top">
+                <div class="monitor-frame">
+                  <span class="dock-indicator ind-right-top"></span>
+                </div>
+                <span class="monitor-label">Right · Top</span>
+              </button>
+
+              <button class="monitor-card" data-pos="right-bottom">
+                <div class="monitor-frame">
+                  <span class="dock-indicator ind-right-bottom"></span>
+                </div>
+                <span class="monitor-label">Right · Bottom</span>
+              </button>
+
+              <button class="monitor-card" data-pos="top-left">
+                <div class="monitor-frame">
+                  <span class="dock-indicator ind-top-left"></span>
+                </div>
+                <span class="monitor-label">Top · Left</span>
+              </button>
+
+              <button class="monitor-card" data-pos="top-right">
+                <div class="monitor-frame">
+                  <span class="dock-indicator ind-top-right"></span>
+                </div>
+                <span class="monitor-label">Top · Right</span>
+              </button>
+
+              <button class="monitor-card" data-pos="bottom-left">
+                <div class="monitor-frame">
+                  <span class="dock-indicator ind-bottom-left"></span>
+                </div>
+                <span class="monitor-label">Bottom · Left</span>
+              </button>
+
+              <button class="monitor-card" data-pos="bottom-right">
+                <div class="monitor-frame">
+                  <span class="dock-indicator ind-bottom-right"></span>
+                </div>
+                <span class="monitor-label">Bottom · Right</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- ============================================================
+               VIEW 5: SET LABELS (Frame 24 & 26)
+               ============================================================ -->
+          <div id="viewSetLabels" class="view-panel">
+            <div class="view-inner-header with-badge">
+              <div>
+                <h2>Set labels</h2>
+                <p>Name each note colour — every note of that colour wears this label, GitHub-style.</p>
+              </div>
+              <span class="pro-badge">PRO</span>
+            </div>
+
+            <div class="label-rows-card">
+              <div class="label-color-row">
+                <div class="color-sample-wrap">
+                  <span class="color-dot color-dot-yellow"></span>
+                  <span class="color-name-text">Yellow</span>
+                </div>
+                <input type="text" id="labelInputYellow" class="label-input" value="In Progress" />
+              </div>
+
+              <div class="label-color-row">
+                <div class="color-sample-wrap">
+                  <span class="color-dot color-dot-green"></span>
+                  <span class="color-name-text">Green</span>
+                </div>
+                <input type="text" id="labelInputGreen" class="label-input" value="Almost There" />
+              </div>
+
+              <div class="label-color-row">
+                <div class="color-sample-wrap">
+                  <span class="color-dot color-dot-purple"></span>
+                  <span class="color-name-text">Purple</span>
+                </div>
+                <input type="text" id="labelInputPurple" class="label-input" value="You can do it." />
+              </div>
+
+              <div class="label-color-row">
+                <div class="color-sample-wrap">
+                  <span class="color-dot color-dot-blue"></span>
+                  <span class="color-name-text">Blue</span>
+                </div>
+                <input type="text" id="labelInputBlue" class="label-input" value="Next Steps" />
+              </div>
+
+              <div class="label-color-row">
+                <div class="color-sample-wrap">
+                  <span class="color-dot color-dot-red"></span>
+                  <span class="color-name-text">Red</span>
+                </div>
+                <input type="text" id="labelInputRed" class="label-input" value="FAAAAAAH" />
+              </div>
+
+              <div class="label-color-row">
+                <div class="color-sample-wrap">
+                  <span class="color-dot color-dot-dark"></span>
+                  <span class="color-name-text">Dark / CLI</span>
+                </div>
+                <input type="text" id="labelInputDark" class="label-input" value="CLI / Terminal" />
+              </div>
+            </div>
+            <p class="field-subtext">Leave a colour empty to hide its label. Labels show on note cards, list rows, and the note header.</p>
+          </div>
+
+          <!-- ============================================================
+               VIEW 6: FONT PICKER (Frame 29 & 31)
+               ============================================================ -->
+          <div id="viewFont" class="view-panel">
+            <div class="view-inner-header">
+              <h2>Font</h2>
+              <p>Choose the typeface used for the text inside your notes.</p>
+            </div>
+
+            <div class="font-options-list">
+              <button class="font-choice-card active" data-font="font-handwritten">
+                <div class="font-meta-title">Handwritten</div>
+                <div class="font-preview-line preview-handwritten">The quick brown fox jumps over the lazy dog</div>
+              </button>
+
+              <button class="font-choice-card" data-font="font-serif">
+                <div class="font-meta-title">Classic Serif</div>
+                <div class="font-preview-line preview-serif">The quick brown fox jumps over the lazy dog</div>
+              </button>
+
+              <button class="font-choice-card" data-font="font-modern">
+                <div class="font-meta-title">Modern Sans</div>
+                <div class="font-preview-line preview-sans">The quick brown fox jumps over the lazy dog</div>
+              </button>
+
+              <button class="font-choice-card" data-font="font-mono">
+                <div class="font-meta-header">
+                  <div class="font-meta-title">Monospace (CLI Code)</div>
+                  <span class="syntax-badge">BLACK / DARK THEME & SYNTAX</span>
+                </div>
+                <div class="font-preview-line preview-mono syntax-preview-box">
+                  <span class="syn-keyword">const</span> <span class="syn-fn">stashThought</span> = <span class="syn-keyword">async</span> (<span class="syn-param">note</span>) =&gt; { <span class="syn-keyword">return</span> { <span class="syn-prop">fast</span>: <span class="syn-bool">true</span>, <span class="syn-prop">id</span>: <span class="syn-num">42</span>, <span class="syn-prop">theme</span>: <span class="syn-str">"cli-black"</span> }; }; <span class="syn-comment">// instant on-disk stash</span>
+                </div>
+              </button>
+
+              <button class="font-choice-card" data-font="font-playful">
+                <div class="font-meta-title">Playful</div>
+                <div class="font-preview-line preview-playful">The quick brown fox jumps over the lazy dog</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- ============================================================
+               VIEW 7: SYNC (Frame 23)
+               ============================================================ -->
+          <div id="viewSync" class="view-panel">
+            <div class="view-inner-header">
+              <h2>Sync</h2>
+              <p>Your notes as a folder of .md files — point Stashy at a cloud-synced folder and every edit follows you across devices.</p>
+            </div>
+
+            <div class="sync-action-box">
+              <div class="sync-path-info">
+                <span class="sync-folder-label">Folder Location:</span>
+                <span id="syncFolderPath" class="sync-folder-val">C:\Users\sjshr\OneDrive\Desktop\Stashy2.0\notes</span>
+              </div>
+              <button id="chooseSyncFolderBtn" class="btn-sync-action">Choose sync folder</button>
+            </div>
+
+            <div class="sync-features-list">
+              <div class="sync-feat-item">
+                <span class="feat-check">✓</span>
+                <span><strong>Live two-way sync</strong> — folder edits appear in Stashy within a second</span>
+              </div>
+              <div class="sync-feat-item">
+                <span class="feat-check">✓</span>
+                <span><strong>One file per note</strong>; pasted images live in assets/</span>
+              </div>
+              <div class="sync-feat-item">
+                <span class="feat-check">✓</span>
+                <span><strong>Deleting a file never deletes a note</strong> — deletions don't propagate</span>
+              </div>
+            </div>
+            <p class="field-subtext">Pick a folder inside your Google Drive / Dropbox / OneDrive local sync location so it uploads automatically.</p>
+          </div>
+
+          <!-- ============================================================
+               VIEW 8: LICENSE
+               ============================================================ -->
+          <div id="viewLicense" class="view-panel">
+            <div class="view-inner-header">
+              <h2>License</h2>
+              <p>Activate your Stashy Pro license to unlock custom labels, cloud sync, and unlimited notes.</p>
+            </div>
+
+            <div class="license-box">
+              <div class="license-status-badge">
+                <span class="status-indicator-dot"></span>
+                <span id="licenseStatusText">PRO ACTIVATED</span>
+              </div>
+              <div class="license-input-wrap">
+                <input type="text" id="licenseKeyInput" value="STASHY-PRO-LIFETIME-UNLOCKED" placeholder="Enter license key (e.g. STIKI-XXXX-XXXX)" />
+                <button id="activateLicenseBtn" class="btn-sync-action">Save Key</button>
+              </div>
+              <p class="field-subtext">Thank you for supporting independent software development!</p>
+            </div>
+          </div>
+
+          <!-- ============================================================
+               VIEW 9: CONTACT
+               ============================================================ -->
+          <div id="viewContact" class="view-panel">
+            <div class="view-inner-header">
+              <h2>Contact</h2>
+              <p>Have feedback, found a bug, or want to suggest a new feature for Stashy?</p>
+            </div>
+
+            <div class="contact-card">
+              <div class="contact-row">
+                <strong>Developer</strong>
+                <span>Stashy Team</span>
+              </div>
+              <div class="contact-row">
+                <strong>Website</strong>
+                <a href="https://github.com/frypan05/Stiki-Releases" target="_blank">Stashy Releases & Docs</a>
+              </div>
+              <div class="contact-row">
+                <strong>Memory Usage</strong>
+                <span>~28 MB (Rust + Tauri v2 Engine)</span>
+              </div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- ============================================================
+           3. SINGLE NOTE EDITOR FLYOUT (Adjacent to edge dock, Frame 4 & 29)
+           ============================================================ -->
+      <div id="editorBackdrop" class="editor-backdrop hidden">
+        <article id="editorCard" class="editor-card card-purple font-handwritten">
+          <!-- Top Bar matching Frame 4 -->
+          <header class="editor-header">
+            <div class="editor-top-left">
+              <button id="editorPinBtn" class="editor-icon-btn" title="Pin note to desktop">📌</button>
+              <button id="editorCompactBtn" class="editor-icon-btn" title="Reduce / Expand note size">↕</button>
+              <span class="editor-drag-grip" title="Hold & drag to move note anywhere">⋮⋮</span>
+            </div>
+
+            <div class="editor-title-wrap">
+              <input type="text" id="editorTitleInput" class="editor-title" placeholder="Note Title..." value="Release" />
+            </div>
+
+            <div class="editor-top-right">
+              <span id="editorSaveStatus" class="editor-saved-pill">Saved · now</span>
+            </div>
+          </header>
+
+          <!-- Textarea / Body with Real-time Syntax Highlighting Backdrop -->
+          <div class="editor-body">
+            <div class="editor-syntax-wrap">
+              <pre id="editorHighlightBackdrop" class="editor-syntax-backdrop" aria-hidden="true"></pre>
+              <textarea id="editorContentInput" class="editor-textarea" spellcheck="false" placeholder="Write your thought... Use - [ ] for tasks."></textarea>
+            </div>
+          </div>
+
+          <!-- Bottom Footer matching Frame 4 -->
+          <footer class="editor-footer">
+            <div class="swatches-row">
+              <button class="swatch-circle color-yellow" data-color="yellow" title="Yellow"></button>
+              <button class="swatch-circle color-green" data-color="green" title="Green"></button>
+              <button class="swatch-circle color-purple active" data-color="purple" title="Purple"></button>
+              <button class="swatch-circle color-blue" data-color="blue" title="Blue"></button>
+              <button class="swatch-circle color-red" data-color="red" title="Red / Peach"></button>
+              <button class="swatch-circle color-dark" data-color="dark" title="Dark / CLI Terminal"></button>
+            </div>
+
+            <div class="editor-bottom-actions">
+              <button id="editorDeleteBtn" class="editor-text-btn btn-delete">Delete</button>
+              <button id="editorCloseBtn" class="editor-text-btn btn-close">Close</button>
+            </div>
+
+            <div id="editorResizeHandle" class="editor-resize-handle" title="Drag corner to resize or reduce note">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
+                <circle cx="8" cy="2" r="1.1"/>
+                <circle cx="8" cy="5.5" r="1.1"/>
+                <circle cx="8" cy="9" r="1.1"/>
+                <circle cx="4.5" cy="5.5" r="1.1"/>
+                <circle cx="4.5" cy="9" r="1.1"/>
+                <circle cx="1" cy="9" r="1.1"/>
+              </svg>
+            </div>
+          </footer>
+        </article>
+      </div>
+
+    </div>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
