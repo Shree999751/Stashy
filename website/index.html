@@ -13,7 +13,7 @@
 
   <link href="https://fonts.googleapis.com" rel="preconnect"/>
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.20/dist/lenis.css" />
 
@@ -23,6 +23,8 @@
         margin: 0;
         padding: 0;
         background-color: #FBF8F4;
+        width: 100%;
+        overflow-x: hidden;
       }
       body {
         overscroll-behavior: none;
@@ -31,31 +33,32 @@
       main > :last-child { margin-bottom: 0 !important; }
     }
     ::-webkit-scrollbar { display: none; }
+    
     .bauhaus-grid {
-      background-size: 32px 32px;
+      background-size: 40px 40px;
       background-image: 
         linear-gradient(to right, rgba(23, 23, 23, 0.05) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(23, 23, 23, 0.05) 1px, transparent 1px);
     }
-    .shadow-brutal {
-      box-shadow: 4px 4px 0px #171717;
-    }
-    .shadow-brutal-sm {
-      box-shadow: 2.5px 2.5px 0px #171717;
-    }
-    .shadow-brutal-lg {
-      box-shadow: 6px 6px 0px #171717;
-    }
-    .shadow-brutal-xl {
-      box-shadow: 10px 10px 0px #171717;
-    }
-    .shadow-brutal-amber {
-      box-shadow: 6px 6px 0px #F59E0B;
-    }
-    .shadow-brutal-white {
-      box-shadow: 4px 4px 0px #ffffff;
-    }
     
+    .shadow-brutal-xs { box-shadow: 2px 2px 0px #171717; }
+    .shadow-brutal-sm { box-shadow: 3px 3px 0px #171717; }
+    .shadow-brutal { box-shadow: 4px 4px 0px #171717; }
+    .shadow-brutal-lg { box-shadow: 6px 6px 0px #171717; }
+    .shadow-brutal-xl { box-shadow: 10px 10px 0px #171717; }
+    .shadow-brutal-amber { box-shadow: 6px 6px 0px #F59E0B; }
+    .shadow-brutal-white { box-shadow: 4px 4px 0px #ffffff; }
+
+    /* Fluid full-viewport container */
+    .site-container {
+      width: 100%;
+      max-width: 1440px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: clamp(1rem, 3.5vw, 4rem);
+      padding-right: clamp(1rem, 3.5vw, 4rem);
+    }
+
     /* Toast styles */
     #siteToast {
       position: fixed;
@@ -75,8 +78,8 @@
     .gateway-modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(23, 23, 23, 0.7);
-      backdrop-filter: blur(4px);
+      background: rgba(23, 23, 23, 0.75);
+      backdrop-filter: blur(6px);
       z-index: 999;
       display: none;
       align-items: center;
@@ -85,6 +88,11 @@
     }
     .gateway-modal-backdrop.active {
       display: flex;
+    }
+
+    /* Mobile Nav Drawer */
+    #mobileNavDrawer {
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
     }
   </style>
 
@@ -128,13 +136,13 @@
     }
   </script>
 </head>
-<body class="bg-alabaster font-body text-charcoal antialiased selection:bg-canary-yellow selection:text-charcoal">
+<body class="bg-alabaster font-body text-charcoal antialiased selection:bg-canary-yellow selection:text-charcoal w-full">
 
-<!-- HEADER: Minimalist Swiss bar with boxed pill navigation & bespoke brand logo -->
-<header class="fixed top-0 left-0 right-0 z-50 bg-alabaster/95 backdrop-blur-md border-b-2 border-kraft-border">
-  <div class="h-16 max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between gap-4">
+<!-- HEADER: Minimalist Swiss bar with fluid padding and responsive mobile drawer -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-alabaster/95 backdrop-blur-md border-b-2 border-kraft-border w-full">
+  <div class="h-16 site-container flex items-center justify-between gap-4">
     <!-- Brand Mark with Stashy Sticky Note Badge -->
-    <div class="flex items-center gap-6">
+    <div class="flex items-center gap-4 sm:gap-6">
       <a class="flex items-center gap-3 group" href="#main">
         <div class="relative w-9 h-9 border-2 border-kraft-border bg-canary-yellow shadow-brutal-sm group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform flex items-center justify-center overflow-hidden p-0.5">
           <img src="logo.png" alt="Stashy Logo" class="w-full h-full object-contain" />
@@ -144,15 +152,16 @@
           <span class="font-mono text-[9px] font-semibold text-paper-muted uppercase tracking-widest mt-0.5">RUST • DESKTOP</span>
         </div>
       </a>
-      <!-- Tactile download counter counterpill -->
-      <a href="https://github.com/frypan05/Stashy-Releases/releases" target="_blank" rel="noopener noreferrer" class="hidden xl:flex items-center gap-2 px-3 py-1 bg-paper-white border-2 border-kraft-border shadow-brutal text-xs font-mono hover:bg-paper-subtle transition-colors">
+      
+      <!-- Tactile download counter pill -->
+      <a href="https://github.com/frypan05/Stashy-Releases/releases" target="_blank" rel="noopener noreferrer" class="hidden md:flex items-center gap-2 px-3 py-1 bg-paper-white border-2 border-kraft-border shadow-brutal text-xs font-mono hover:bg-paper-subtle transition-colors">
         <span class="w-2 h-2 rounded-full bg-mint-tab border border-kraft-border animate-pulse"></span>
         <span class="font-bold text-charcoal" id="headerDownloadCounter">1,420</span>
         <span class="text-paper-muted">tucks today</span>
       </a>
     </div>
 
-    <!-- Swiss Grid Pill Nav -->
+    <!-- Swiss Grid Pill Nav (Desktop) -->
     <nav class="hidden lg:flex items-center gap-1 bg-paper-subtle p-1 border-2 border-kraft-border shadow-[2px_2px_0px_#171717]">
       <a class="px-3.5 py-1 text-xs font-label uppercase tracking-wider font-bold text-charcoal hover:bg-paper-white border border-transparent hover:border-kraft-border transition-all" href="#features">Features</a>
       <a class="px-3.5 py-1 text-xs font-label uppercase tracking-wider font-bold text-charcoal hover:bg-paper-white border border-transparent hover:border-kraft-border transition-all" href="#dock-port">Bezel Sensor</a>
@@ -161,77 +170,99 @@
       <a class="px-3.5 py-1 text-xs font-label uppercase tracking-wider font-bold text-charcoal hover:bg-paper-white border border-transparent hover:border-kraft-border transition-all" href="#faq">FAQ</a>
     </nav>
 
-    <!-- High-Contrast Brutalist Download Button -->
-    <div class="flex items-center gap-3">
-      <a class="inline-flex items-center gap-2.5 px-4 py-2 bg-charcoal text-paper-white border-2 border-kraft-border font-label text-xs uppercase tracking-wider font-bold shadow-brutal hover:bg-swiss-red hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all" href="#download" id="headerDownloadBtn">
+    <!-- Header Action Button & Mobile Hamburger -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <a class="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-charcoal text-paper-white border-2 border-kraft-border font-label text-xs uppercase tracking-wider font-bold shadow-brutal hover:bg-swiss-red hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all" href="#download" id="headerDownloadBtn">
         <span class="material-symbols-outlined text-canary-yellow text-[17px]">download</span>
         <span>Get Stashy</span>
-        <span class="bg-paper-white/20 text-canary-yellow px-1.5 py-0.2 font-mono text-[10px] rounded-none">v0.1.0</span>
+        <span class="hidden sm:inline-block bg-paper-white/20 text-canary-yellow px-1.5 py-0.2 font-mono text-[10px] rounded-none">v0.1.0</span>
       </a>
+      
+      <!-- Mobile menu toggle -->
+      <button type="button" class="lg:hidden w-9 h-9 border-2 border-kraft-border bg-paper-white flex items-center justify-center font-bold text-charcoal shadow-brutal-sm cursor-pointer hover:bg-paper-subtle" onclick="toggleMobileNav()" aria-label="Toggle navigation">
+        <span class="material-symbols-outlined text-xl" id="mobileMenuIcon">menu</span>
+      </button>
     </div>
+  </div>
+
+  <!-- Mobile Nav Dropdown Drawer -->
+  <div class="lg:hidden hidden border-t-2 border-kraft-border bg-alabaster px-6 py-4 space-y-2 shadow-brutal-lg" id="mobileNavDrawer">
+    <a class="block py-2 text-xs font-label uppercase tracking-wider font-bold text-charcoal border-b border-paper-subtle-2" href="#features" onclick="toggleMobileNav()">Features</a>
+    <a class="block py-2 text-xs font-label uppercase tracking-wider font-bold text-charcoal border-b border-paper-subtle-2" href="#dock-port" onclick="toggleMobileNav()">Bezel Sensor</a>
+    <a class="block py-2 text-xs font-label uppercase tracking-wider font-bold text-charcoal border-b border-paper-subtle-2" href="#benchmarks" onclick="toggleMobileNav()">Benchmarks</a>
+    <a class="block py-2 text-xs font-label uppercase tracking-wider font-bold text-charcoal border-b border-paper-subtle-2" href="#pricing" onclick="toggleMobileNav()">Pricing</a>
+    <a class="block py-2 text-xs font-label uppercase tracking-wider font-bold text-charcoal" href="#faq" onclick="toggleMobileNav()">FAQ</a>
   </div>
 </header>
 
 <main class="w-full pt-16 bg-alabaster min-h-screen" id="main">
-  <!-- HERO SECTION: Tactile Swiss Editorial Layout -->
-  <section class="relative w-full bauhaus-grid py-16 lg:py-24 border-b-2 border-kraft-border overflow-hidden">
-    <div class="relative max-w-7xl mx-auto px-6 lg:px-12 flex flex-col items-center text-center">
+  <!-- HERO SECTION: Fluid, expansive Bauhaus layout with commanding scale -->
+  <section class="relative w-full bauhaus-grid py-12 sm:py-20 lg:py-28 2xl:py-36 border-b-2 border-kraft-border overflow-hidden">
+    <div class="relative site-container flex flex-col items-center text-center">
       <!-- Swiss Editorial Stamp / Technical Tag -->
-      <div class="inline-flex items-center gap-3 px-4 py-1.5 bg-paper-white border-2 border-kraft-border shadow-brutal mb-8 rotate-[-0.5deg]">
-        <span class="w-2.5 h-2.5 bg-canary-yellow border border-kraft-border"></span>
-        <span class="font-mono text-xs font-bold tracking-widest text-charcoal uppercase">
+      <div class="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1.5 bg-paper-white border-2 border-kraft-border shadow-brutal mb-6 sm:mb-8 rotate-[-0.5deg]">
+        <span class="w-2.5 h-2.5 bg-canary-yellow border border-kraft-border shrink-0"></span>
+        <span class="font-mono text-[11px] sm:text-xs font-bold tracking-widest text-charcoal uppercase">
           TAURI v2 + RUST ENGINE • 28MB RAM FLAT
         </span>
-        <span class="hidden sm:inline-block font-mono text-[11px] bg-paper-subtle px-1.5 py-0.5 border border-kraft-border font-semibold">ZERO ELECTRON</span>
+        <span class="hidden sm:inline-block font-mono text-[10px] bg-paper-subtle px-1.5 py-0.5 border border-kraft-border font-semibold">ZERO ELECTRON</span>
       </div>
 
-      <!-- Main Headline: Space Grotesk High-Contrast Bauhaus Display -->
-      <h1 class="font-headline font-bold text-4xl sm:text-6xl lg:text-7xl tracking-tighter text-charcoal max-w-5xl leading-[1.04] uppercase">
+      <!-- Main Headline: Scaled fluid typography with commanding presence -->
+      <h1 class="font-headline font-bold text-4xl sm:text-6xl md:text-7xl lg:text-8xl 2xl:text-9xl tracking-tighter text-charcoal max-w-6xl leading-[0.98] uppercase">
         The frictionless scratchpad <br class="hidden sm:block"/>
-        <span class="bg-canary-yellow px-3 py-0.5 border-2 border-kraft-border shadow-[3px_3px_0px_#171717] inline-block my-1">anchored</span> on your screen edge.
+        <span class="bg-canary-yellow px-2 sm:px-4 py-0.5 sm:py-1 border-2 border-kraft-border shadow-brutal-sm inline-block my-1 sm:my-2">anchored</span> on your screen edge.
       </h1>
 
       <!-- Editorial Subtitle with Crisp Swiss Rhythm -->
-      <p class="mt-6 text-lg sm:text-xl text-paper-muted max-w-2xl font-body leading-relaxed">
+      <p class="mt-6 sm:mt-8 text-base sm:text-xl lg:text-2xl text-paper-muted max-w-3xl font-body leading-relaxed">
         Hover to glance, write in Markdown, drift away to auto-tuck into the display bezel. Handcrafted in native Rust for minds that think at lightspeed.
       </p>
 
       <!-- Action Row -->
-      <div class="mt-8 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-        <a class="w-full sm:w-auto group flex items-center justify-center gap-3.5 px-8 py-4 bg-charcoal text-paper-white border-2 border-kraft-border shadow-brutal-lg hover:bg-canary-yellow hover:text-charcoal hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-brutal active:translate-x-1 active:translate-y-1 active:shadow-none transition-all" href="#download" id="heroPrimaryDownloadBtn">
+      <div class="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+        <a class="w-full sm:w-auto group flex items-center justify-center gap-3.5 px-6 sm:px-8 py-3.5 sm:py-4 bg-charcoal text-paper-white border-2 border-kraft-border shadow-brutal-lg hover:bg-canary-yellow hover:text-charcoal hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-brutal active:translate-x-1 active:translate-y-1 active:shadow-none transition-all" href="#download" id="heroPrimaryDownloadBtn">
           <span class="material-symbols-outlined text-2xl group-hover:text-charcoal text-canary-yellow">desktop_windows</span>
           <div class="text-left">
-            <span class="block font-label text-sm uppercase tracking-wider font-bold" id="heroDownloadTitle">Download for Mac &amp; PC</span>
-            <span class="block font-mono text-[11px] opacity-80 group-hover:opacity-100 font-medium" id="heroDownloadSub">Native .msi &amp; .dmg • 2.4 MB</span>
+            <span class="block font-label text-xs sm:text-sm uppercase tracking-wider font-bold" id="heroDownloadTitle">Download for Windows</span>
+            <span class="block font-mono text-[10px] sm:text-[11px] opacity-80 group-hover:opacity-100 font-medium" id="heroDownloadSub">Native .msi &amp; .exe (x64/ARM64) • 2.6 MB</span>
           </div>
         </a>
-        <a class="w-full sm:w-auto flex items-center justify-center gap-2.5 px-6 py-4 bg-paper-white border-2 border-kraft-border shadow-brutal hover:bg-paper-subtle hover:translate-x-0.5 hover:translate-y-0.5 transition-all font-label text-xs uppercase tracking-wider font-bold text-charcoal" href="https://github.com/frypan05/Stashy-Releases" rel="noopener noreferrer" target="_blank">
+        <a class="w-full sm:w-auto flex items-center justify-center gap-2.5 px-5 sm:px-6 py-3.5 sm:py-4 bg-paper-white border-2 border-kraft-border shadow-brutal hover:bg-paper-subtle hover:translate-x-0.5 hover:translate-y-0.5 transition-all font-label text-xs uppercase tracking-wider font-bold text-charcoal" href="https://github.com/frypan05/Stashy-Releases" rel="noopener noreferrer" target="_blank">
           <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
           <span>Source &amp; Cargo Crate</span>
         </a>
       </div>
 
-      <!-- INTERACTIVE DESKTOP CANVAS: Rust IDE + Draggable/Tuckable Canary Sticky -->
-      <div class="mt-14 w-full max-w-5xl bg-charcoal border-3 border-kraft-border shadow-brutal-xl relative overflow-hidden text-left">
+      <!-- RESPONSIVE DESKTOP CANVAS: Real Workstation scale with mobile view toggle -->
+      <div class="mt-12 sm:mt-16 w-full max-w-6xl 2xl:max-w-7xl bg-charcoal border-3 border-kraft-border shadow-brutal-xl relative overflow-hidden text-left">
         <!-- Mechanical Title Bar -->
-        <div class="h-10 bg-paper-dark border-b-2 border-kraft-border px-4 flex items-center justify-between">
+        <div class="h-10 bg-paper-dark border-b-2 border-kraft-border px-3 sm:px-4 flex items-center justify-between">
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 bg-swiss-red border border-kraft-border inline-block"></span>
             <span class="w-3 h-3 bg-canary-yellow border border-kraft-border inline-block"></span>
             <span class="w-3 h-3 bg-mint-tab border border-kraft-border inline-block"></span>
-            <span class="ml-4 font-mono text-xs text-[#a3a3a3]">~/workspace/stashy-core/src/bezel_listener.rs</span>
+            <span class="ml-2 sm:ml-4 font-mono text-[11px] sm:text-xs text-[#a3a3a3] truncate max-w-[200px] sm:max-w-md">~/workspace/stashy-core/src/bezel_listener.rs</span>
           </div>
-          <div class="flex items-center gap-3">
-            <span class="px-2 py-0.5 bg-charcoal text-mint-tab font-mono text-[10px] uppercase font-bold border border-[#333]">
+          
+          <div class="flex items-center gap-2 sm:gap-3">
+            <!-- Mobile viewport tab switch (visible on small screens) -->
+            <div class="flex lg:hidden bg-charcoal border border-[#333] p-0.5">
+              <button class="px-2 py-0.5 bg-paper-white text-charcoal font-mono text-[9px] uppercase font-bold" id="mobileCodeTabBtn" onclick="switchMobileMockupView('code')">Code</button>
+              <button class="px-2 py-0.5 text-paper-white font-mono text-[9px] uppercase font-bold" id="mobileDockTabBtn" onclick="switchMobileMockupView('dock')">Dock Note</button>
+            </div>
+            
+            <span class="hidden sm:inline-block px-2 py-0.5 bg-charcoal text-mint-tab font-mono text-[10px] uppercase font-bold border border-[#333]">
               DAEMON HOOK: 0.1ms
             </span>
-            <span class="font-mono text-xs text-[#737373]">UTF-8 CRLF</span>
+            <span class="hidden md:inline-block font-mono text-xs text-[#737373]">UTF-8 CRLF</span>
           </div>
         </div>
 
-        <!-- Rust Code Editor Buffer -->
-        <div class="relative bg-[#191919] min-h-[390px] p-6 font-mono text-xs text-[#d4d4d4] flex overflow-hidden">
-          <div class="w-full pr-80 select-none overflow-hidden space-y-1">
+        <!-- Rust Code Editor Buffer + Responsive Dock Note Container -->
+        <div class="relative bg-[#191919] min-h-[440px] sm:min-h-[480px] lg:min-h-[520px] p-4 sm:p-6 font-mono text-xs text-[#d4d4d4] flex overflow-hidden">
+          <!-- Code Column (flex-1 with right padding for sticky on desktop) -->
+          <div class="w-full lg:pr-96 select-none overflow-x-hidden space-y-1.5" id="mockupCodePane">
             <div class="flex leading-6 text-[#737373]"><span class="w-8 text-[#525252]">01</span><span><span class="text-[#ff7b72]">use</span> tauri::{AppHandle, PhysicalPosition, Window};</span></div>
             <div class="flex leading-6 text-[#737373]"><span class="w-8 text-[#525252]">02</span><span><span class="text-[#ff7b72]">use</span> notify::{Watcher, RecursiveMode};</span></div>
             <div class="flex leading-6 text-[#737373]"><span class="w-8 text-[#525252]">03</span><span></span></div>
@@ -244,64 +275,65 @@
             <div class="flex leading-6 text-[#737373]"><span class="w-8 text-[#525252]">10</span><span class="pl-4">}</span></div>
             <div class="flex leading-6 text-[#737373]"><span class="w-8 text-[#525252]">11</span><span class="pl-4"><span class="text-[#ff7b72]">false</span></span></div>
             <div class="flex leading-6 text-[#737373]"><span class="w-8 text-[#525252]">12</span><span>}</span></div>
-            <div class="flex leading-6 text-[#737373] pt-2"><span class="w-8 text-[#525252]">13</span><span class="text-[#7ee787]">✓ Sync thread active: ~/.stashy/notes/*.md (Local inotify ready)</span></div>
+            <div class="flex leading-6 text-[#737373] pt-3"><span class="w-8 text-[#525252]">13</span><span class="text-[#7ee787]">✓ Sync thread active: ~/.stashy/notes/*.md (Local inotify ready)</span></div>
+            <div class="flex leading-6 text-[#737373]"><span class="w-8 text-[#525252]">14</span><span class="text-[#7ee787]">✓ Resident memory: 28.2 MB | 0 background network packets</span></div>
           </div>
 
-          <!-- TACTILE DOCK STICKY: Physical Paper Aesthetics & Functional Tuck Slider -->
-          <div class="absolute top-4 right-0 h-[350px] w-80 bg-canary-yellow border-y-2 border-l-2 border-kraft-border shadow-[-6px_6px_0px_#171717] flex transition-transform duration-300 ease-out z-10" id="heroStickyDock">
+          <!-- TACTILE DOCK STICKY: Responsive positioning (stacked on mobile tab, edge-pinned on desktop) -->
+          <div class="hidden lg:flex lg:absolute top-4 right-0 h-[400px] w-84 sm:w-96 bg-canary-yellow border-y-2 border-l-2 border-kraft-border shadow-[-6px_6px_0px_#171717] transition-transform duration-300 ease-out z-10" id="heroStickyDock">
             <!-- Left Tactile Binder spine with chromatic swatches -->
-            <div class="w-9 bg-charcoal flex flex-col items-center py-2.5 gap-2.5 border-r-2 border-kraft-border select-none">
-              <button class="w-5 h-5 bg-canary-yellow border border-kraft-border hover:scale-110 transition-transform cursor-pointer" onclick="quickSwitchColor('#FCD34D', '#171717')" title="Canary Sprint Notes"></button>
-              <button class="w-5 h-5 bg-coral-tab border border-kraft-border opacity-70 hover:opacity-100 hover:scale-110 transition-transform cursor-pointer" onclick="quickSwitchColor('#FDA4AF', '#171717')" title="Work Tasks"></button>
-              <button class="w-5 h-5 bg-mint-tab border border-kraft-border opacity-70 hover:opacity-100 hover:scale-110 transition-transform cursor-pointer" onclick="quickSwitchColor('#86EFAC', '#171717')" title="Personal Notes"></button>
-              <button class="w-5 h-5 bg-lavender-tab border border-kraft-border opacity-70 hover:opacity-100 hover:scale-110 transition-transform cursor-pointer" onclick="quickSwitchColor('#DDD6FE', '#171717')" title="Research"></button>
-              <button class="w-5 h-5 bg-sky-tab border border-kraft-border opacity-70 hover:opacity-100 hover:scale-110 transition-transform cursor-pointer" onclick="quickSwitchColor('#7DD3FC', '#171717')" title="Architecture Log"></button>
+            <div class="w-10 bg-charcoal flex flex-col items-center py-3 gap-3 border-r-2 border-kraft-border select-none shrink-0">
+              <button class="w-5 h-5 bg-canary-yellow border border-kraft-border hover:scale-110 transition-transform cursor-pointer" onclick="quickSwitchColor('#FCD34D')" title="Canary Sprint Notes"></button>
+              <button class="w-5 h-5 bg-coral-tab border border-kraft-border opacity-70 hover:opacity-100 hover:scale-110 transition-transform cursor-pointer" onclick="quickSwitchColor('#FDA4AF')" title="Work Tasks"></button>
+              <button class="w-5 h-5 bg-mint-tab border border-kraft-border opacity-70 hover:opacity-100 hover:scale-110 transition-transform cursor-pointer" onclick="quickSwitchColor('#86EFAC')" title="Personal Notes"></button>
+              <button class="w-5 h-5 bg-lavender-tab border border-kraft-border opacity-70 hover:opacity-100 hover:scale-110 transition-transform cursor-pointer" onclick="quickSwitchColor('#DDD6FE')" title="Research"></button>
+              <button class="w-5 h-5 bg-sky-tab border border-kraft-border opacity-70 hover:opacity-100 hover:scale-110 transition-transform cursor-pointer" onclick="quickSwitchColor('#7DD3FC')" title="Architecture Log"></button>
               <div class="mt-auto [writing-mode:vertical-rl] text-[9px] font-mono tracking-widest text-paper-white/70 uppercase">
                 BEZEL DOCK
               </div>
             </div>
 
             <!-- Sticky Note Content Pane -->
-            <div class="flex-1 p-4 flex flex-col text-charcoal select-none" id="heroNoteBody">
+            <div class="flex-1 p-5 flex flex-col text-charcoal select-none" id="heroNoteBody">
               <!-- Sticky Header -->
-              <div class="flex items-center justify-between border-b-2 border-kraft-border pb-2 mb-3">
-                <span class="font-headline font-bold text-xs uppercase tracking-tight flex items-center gap-1.5" id="heroNoteTitle">
-                  <span class="w-2 h-2 rounded-full bg-swiss-red"></span>
+              <div class="flex items-center justify-between border-b-2 border-kraft-border pb-2.5 mb-3.5">
+                <span class="font-headline font-bold text-xs sm:text-sm uppercase tracking-tight flex items-center gap-2" id="heroNoteTitle">
+                  <span class="w-2.5 h-2.5 rounded-full bg-swiss-red"></span>
                   Sprint Architecture
                 </span>
-                <span class="font-mono text-[10px] font-bold text-paper-muted">14:02 UTC</span>
+                <span class="font-mono text-[10px] sm:text-xs font-bold text-paper-muted">14:02 UTC</span>
               </div>
 
               <!-- Checklists in Raw Markdown Flavor -->
-              <div class="space-y-2 text-xs font-mono flex-1 overflow-y-auto pr-1">
-                <label class="flex items-start gap-2 cursor-pointer text-[11px] leading-tight select-none">
-                  <input checked class="mt-0.5 accent-charcoal h-3.5 w-3.5 border-2 border-kraft-border cursor-pointer task-checkbox" type="checkbox"/>
+              <div class="space-y-2.5 text-xs font-mono flex-1 overflow-y-auto pr-1">
+                <label class="flex items-start gap-2.5 cursor-pointer text-xs leading-tight select-none">
+                  <input checked class="mt-0.5 accent-charcoal h-4 w-4 border-2 border-kraft-border cursor-pointer task-checkbox" type="checkbox"/>
                   <span class="line-through text-paper-muted task-text">Local sqlite filecache bypass</span>
                 </label>
-                <label class="flex items-start gap-2 cursor-pointer text-[11px] leading-tight select-none">
-                  <input checked class="mt-0.5 accent-charcoal h-3.5 w-3.5 border-2 border-kraft-border cursor-pointer task-checkbox" type="checkbox"/>
+                <label class="flex items-start gap-2.5 cursor-pointer text-xs leading-tight select-none">
+                  <input checked class="mt-0.5 accent-charcoal h-4 w-4 border-2 border-kraft-border cursor-pointer task-checkbox" type="checkbox"/>
                   <span class="line-through text-paper-muted task-text">Rust cross-compile to aarch64</span>
                 </label>
-                <label class="flex items-start gap-2 cursor-pointer text-[11px] leading-tight select-none">
-                  <input class="mt-0.5 accent-charcoal h-3.5 w-3.5 border-2 border-kraft-border cursor-pointer task-checkbox" type="checkbox"/>
+                <label class="flex items-start gap-2.5 cursor-pointer text-xs leading-tight select-none">
+                  <input class="mt-0.5 accent-charcoal h-4 w-4 border-2 border-kraft-border cursor-pointer task-checkbox" type="checkbox"/>
                   <span class="font-bold text-charcoal task-text">Spring damping tuck curve</span>
                 </label>
-                <label class="flex items-start gap-2 cursor-pointer text-[11px] leading-tight select-none">
-                  <input class="mt-0.5 accent-charcoal h-3.5 w-3.5 border-2 border-kraft-border cursor-pointer task-checkbox" type="checkbox"/>
+                <label class="flex items-start gap-2.5 cursor-pointer text-xs leading-tight select-none">
+                  <input class="mt-0.5 accent-charcoal h-4 w-4 border-2 border-kraft-border cursor-pointer task-checkbox" type="checkbox"/>
                   <span class="text-charcoal task-text">Bi-directional Obsidian sync</span>
                 </label>
-                <div class="mt-3 p-2 bg-paper-white/90 border-2 border-kraft-border text-[10px]">
+                <div class="mt-4 p-2.5 bg-paper-white/90 border-2 border-kraft-border text-[11px] leading-snug">
                   <span class="font-bold text-swiss-red"># MANIFESTO:</span> No cloud lock-in. Zero latency. Pure local markdown.
                 </div>
               </div>
 
               <!-- Interactive Controls: Toggle Tuck to Bezel -->
-              <div class="mt-3 pt-2 border-t-2 border-kraft-border flex items-center justify-between">
-                <button class="px-2.5 py-1 bg-charcoal text-paper-white font-label text-[10px] uppercase font-bold tracking-wider hover:bg-swiss-red transition-colors flex items-center gap-1.5 border border-kraft-border shadow-brutal cursor-pointer" id="tuckToggleBtn" onclick="toggleHeroDock()">
-                  <span class="material-symbols-outlined text-[14px]" id="tuckIcon">arrow_forward</span>
+              <div class="mt-3.5 pt-3 border-t-2 border-kraft-border flex items-center justify-between">
+                <button class="px-3 py-1.5 bg-charcoal text-paper-white font-label text-[11px] uppercase font-bold tracking-wider hover:bg-swiss-red transition-colors flex items-center gap-1.5 border border-kraft-border shadow-brutal cursor-pointer" id="tuckToggleBtn" onclick="toggleHeroDock()">
+                  <span class="material-symbols-outlined text-[15px]" id="tuckIcon">arrow_forward</span>
                   <span id="tuckBtnLabel">Tuck to Bezel</span>
                 </button>
-                <span class="text-[9px] font-mono text-paper-muted font-bold uppercase tracking-wider">AUTO-DISMISS</span>
+                <span class="text-[10px] font-mono text-paper-muted font-bold uppercase tracking-wider">AUTO-DISMISS</span>
               </div>
             </div>
           </div>
@@ -311,97 +343,103 @@
   </section>
 
   <!-- PERFORMANCE BENCHMARK: THE "ANTI-BLOAT" PROOF -->
-  <section class="w-full bg-paper-subtle border-b-2 border-kraft-border py-16" id="benchmarks">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+  <section class="w-full bg-paper-subtle border-b-2 border-kraft-border py-16 sm:py-24" id="benchmarks">
+    <div class="site-container">
       <!-- Section Header -->
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-14 gap-4">
         <div>
-          <div class="inline-block px-2.5 py-0.5 bg-swiss-red text-paper-white font-mono text-xs font-bold uppercase tracking-wider mb-2 border border-kraft-border">
+          <div class="inline-block px-3 py-1 bg-swiss-red text-paper-white font-mono text-xs font-bold uppercase tracking-wider mb-3 border border-kraft-border">
             BENCHMARK LAB AUDIT
           </div>
-          <h2 class="font-headline font-bold text-3xl sm:text-5xl uppercase tracking-tight text-charcoal">
+          <h2 class="font-headline font-bold text-3xl sm:text-5xl lg:text-6xl uppercase tracking-tight text-charcoal">
             THE ANTI-BLOAT PROOF
           </h2>
         </div>
-        <div class="font-mono text-xs text-paper-muted flex items-center gap-2 bg-paper-white px-3 py-1.5 border-2 border-kraft-border">
+        <div class="font-mono text-xs text-paper-muted flex items-center gap-2 bg-paper-white px-3.5 py-2 border-2 border-kraft-border self-start md:self-auto">
           <span class="w-2.5 h-2.5 bg-mint-tab border border-kraft-border"></span>
           <span>APPLE M3 MAX • LINUX KERNEL 6.8 • AUDITED 2026</span>
         </div>
       </div>
 
       <!-- Comparative Neo-Brutalist Board -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
         <!-- Bloated Electron Card -->
-        <div class="bg-paper-white border-3 border-kraft-border p-8 relative shadow-brutal">
-          <div class="absolute -top-3.5 right-6 px-3 py-0.5 bg-swiss-red text-paper-white text-[11px] font-mono uppercase font-bold border-2 border-kraft-border">
-            STATUS QUO: ELECTRON APPS
-          </div>
-          <h3 class="font-headline font-bold text-2xl uppercase tracking-tight text-charcoal mb-1">Web-Wrapper Notes</h3>
-          <p class="font-body text-xs text-paper-muted mb-8">Notion, Slack drafts, standard Electron scratchpads</p>
-          <div class="space-y-6">
-            <div>
-              <div class="flex justify-between font-mono text-xs mb-2 font-bold">
-                <span>RAM CONSUMPTION (IDLE)</span>
-                <span class="text-swiss-red text-sm">~850 MB</span>
-              </div>
-              <div class="w-full h-5 bg-paper-subtle border-2 border-kraft-border p-0.5">
-                <div class="h-full bg-swiss-red w-[94%]"></div>
-              </div>
+        <div class="bg-paper-white border-3 border-kraft-border p-6 sm:p-10 relative shadow-brutal flex flex-col justify-between">
+          <div>
+            <div class="absolute -top-3.5 right-6 px-3 py-0.5 bg-swiss-red text-paper-white text-[11px] font-mono uppercase font-bold border-2 border-kraft-border">
+              STATUS QUO: ELECTRON APPS
             </div>
-            <div class="grid grid-cols-2 gap-4 pt-4 border-t-2 border-kraft-border text-xs font-mono">
+            <h3 class="font-headline font-bold text-2xl sm:text-3xl uppercase tracking-tight text-charcoal mb-1">Web-Wrapper Notes</h3>
+            <p class="font-body text-xs sm:text-sm text-paper-muted mb-8">Notion, Slack drafts, standard Electron scratchpads</p>
+            
+            <div class="space-y-6">
               <div>
-                <span class="block text-paper-muted text-[10px] uppercase font-bold">COLD BOOT TIME:</span>
-                <span class="font-bold text-charcoal text-base">3.4 Seconds</span>
+                <div class="flex justify-between font-mono text-xs sm:text-sm mb-2 font-bold">
+                  <span>RAM CONSUMPTION (IDLE)</span>
+                  <span class="text-swiss-red text-sm sm:text-base">~850 MB</span>
+                </div>
+                <div class="w-full h-6 bg-paper-subtle border-2 border-kraft-border p-0.5">
+                  <div class="h-full bg-swiss-red w-[94%]"></div>
+                </div>
               </div>
-              <div>
-                <span class="block text-paper-muted text-[10px] uppercase font-bold">DATA FORMAT:</span>
-                <span class="font-bold text-charcoal text-base">Proprietary Cloud DB</span>
-              </div>
-              <div>
-                <span class="block text-paper-muted text-[10px] uppercase font-bold">OS THREADS:</span>
-                <span class="font-bold text-charcoal text-base">14 Background Daemons</span>
-              </div>
-              <div>
-                <span class="block text-paper-muted text-[10px] uppercase font-bold">TELEMETRY:</span>
-                <span class="font-bold text-swiss-red text-base">Continuous Ping</span>
+              <div class="grid grid-cols-2 gap-4 pt-4 border-t-2 border-kraft-border text-xs sm:text-sm font-mono">
+                <div>
+                  <span class="block text-paper-muted text-[10px] sm:text-xs uppercase font-bold">COLD BOOT TIME:</span>
+                  <span class="font-bold text-charcoal text-sm sm:text-base">3.4 Seconds</span>
+                </div>
+                <div>
+                  <span class="block text-paper-muted text-[10px] sm:text-xs uppercase font-bold">DATA FORMAT:</span>
+                  <span class="font-bold text-charcoal text-sm sm:text-base">Proprietary Cloud DB</span>
+                </div>
+                <div>
+                  <span class="block text-paper-muted text-[10px] sm:text-xs uppercase font-bold">OS THREADS:</span>
+                  <span class="font-bold text-charcoal text-sm sm:text-base">14 Background Daemons</span>
+                </div>
+                <div>
+                  <span class="block text-paper-muted text-[10px] sm:text-xs uppercase font-bold">TELEMETRY:</span>
+                  <span class="font-bold text-swiss-red text-sm sm:text-base">Continuous Ping</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Stashy Native Rust Card -->
-        <div class="bg-charcoal text-paper-white border-3 border-kraft-border p-8 relative shadow-brutal-amber">
-          <div class="absolute -top-3.5 right-6 px-3 py-0.5 bg-canary-yellow text-charcoal text-[11px] font-mono uppercase font-bold border-2 border-kraft-border">
-            30X LIGHTER &amp; FASTER
-          </div>
-          <h3 class="font-headline font-bold text-2xl uppercase tracking-tight text-paper-white mb-1">Stashy Native Rust</h3>
-          <p class="font-body text-xs text-[#a3a3a3] mb-8">Tauri v2 + Direct OS Bezel Raycaster</p>
-          <div class="space-y-6">
-            <div>
-              <div class="flex justify-between font-mono text-xs mb-2 font-bold">
-                <span class="text-[#e5e5e5]">RAM CONSUMPTION (ACTIVE DOCK)</span>
-                <span class="text-canary-yellow text-sm">28 MB</span>
-              </div>
-              <div class="w-full h-5 bg-[#262626] border-2 border-canary-yellow p-0.5">
-                <div class="h-full bg-canary-yellow w-[3.5%]"></div>
-              </div>
+        <div class="bg-charcoal text-paper-white border-3 border-kraft-border p-6 sm:p-10 relative shadow-brutal-amber flex flex-col justify-between">
+          <div>
+            <div class="absolute -top-3.5 right-6 px-3 py-0.5 bg-canary-yellow text-charcoal text-[11px] font-mono uppercase font-bold border-2 border-kraft-border">
+              30X LIGHTER &amp; FASTER
             </div>
-            <div class="grid grid-cols-2 gap-4 pt-4 border-t-2 border-[#333] text-xs font-mono text-paper-white">
+            <h3 class="font-headline font-bold text-2xl sm:text-3xl uppercase tracking-tight text-paper-white mb-1">Stashy Native Rust</h3>
+            <p class="font-body text-xs sm:text-sm text-[#a3a3a3] mb-8">Tauri v2 + Direct OS Bezel Raycaster</p>
+            
+            <div class="space-y-6">
               <div>
-                <span class="block text-[#a3a3a3] text-[10px] uppercase font-bold">COLD BOOT TIME:</span>
-                <span class="font-bold text-canary-yellow text-base">0.12s (Instant)</span>
+                <div class="flex justify-between font-mono text-xs sm:text-sm mb-2 font-bold">
+                  <span class="text-[#e5e5e5]">RAM CONSUMPTION (ACTIVE DOCK)</span>
+                  <span class="text-canary-yellow text-sm sm:text-base">28 MB</span>
+                </div>
+                <div class="w-full h-6 bg-[#262626] border-2 border-canary-yellow p-0.5">
+                  <div class="h-full bg-canary-yellow w-[3.5%]"></div>
+                </div>
               </div>
-              <div>
-                <span class="block text-[#a3a3a3] text-[10px] uppercase font-bold">DATA FORMAT:</span>
-                <span class="font-bold text-mint-tab text-base">100% Plain UTF-8 .md</span>
-              </div>
-              <div>
-                <span class="block text-[#a3a3a3] text-[10px] uppercase font-bold">OS THREADS:</span>
-                <span class="font-bold text-paper-white text-base">Single Thread</span>
-              </div>
-              <div>
-                <span class="block text-[#a3a3a3] text-[10px] uppercase font-bold">TELEMETRY:</span>
-                <span class="font-bold text-mint-tab text-base">Zero Trackers / Offline</span>
+              <div class="grid grid-cols-2 gap-4 pt-4 border-t-2 border-[#333] text-xs sm:text-sm font-mono text-paper-white">
+                <div>
+                  <span class="block text-[#a3a3a3] text-[10px] sm:text-xs uppercase font-bold">COLD BOOT TIME:</span>
+                  <span class="font-bold text-canary-yellow text-sm sm:text-base">0.12s (Instant)</span>
+                </div>
+                <div>
+                  <span class="block text-[#a3a3a3] text-[10px] sm:text-xs uppercase font-bold">DATA FORMAT:</span>
+                  <span class="font-bold text-mint-tab text-sm sm:text-base">100% Plain UTF-8 .md</span>
+                </div>
+                <div>
+                  <span class="block text-[#a3a3a3] text-[10px] sm:text-xs uppercase font-bold">OS THREADS:</span>
+                  <span class="font-bold text-paper-white text-sm sm:text-base">Single Lightweight Thread</span>
+                </div>
+                <div>
+                  <span class="block text-[#a3a3a3] text-[10px] sm:text-xs uppercase font-bold">TELEMETRY:</span>
+                  <span class="font-bold text-mint-tab text-sm sm:text-base">Zero Trackers / Offline</span>
+                </div>
               </div>
             </div>
           </div>
@@ -411,51 +449,52 @@
   </section>
 
   <!-- BENTO GRID: TACTILE NOTEBOOK-INSPIRED ARCHITECTURE -->
-  <section class="w-full py-20 bg-alabaster border-b-2 border-kraft-border" id="features">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12">
-      <div class="mb-12">
+  <section class="w-full py-20 sm:py-28 bg-alabaster border-b-2 border-kraft-border" id="features">
+    <div class="site-container">
+      <div class="mb-12 sm:mb-16">
         <span class="font-mono text-xs uppercase tracking-widest text-swiss-red font-bold">• ARCHITECTURAL SYSTEM SPECIFICATIONS</span>
-        <h2 class="font-headline font-bold text-4xl sm:text-5xl uppercase tracking-tight text-charcoal mt-2">
+        <h2 class="font-headline font-bold text-3xl sm:text-5xl lg:text-6xl uppercase tracking-tight text-charcoal mt-2">
           Engineered for velocity. Zero ceremony.
         </h2>
-        <p class="font-body text-paper-muted max-w-2xl mt-3 text-base">
+        <p class="font-body text-paper-muted max-w-3xl mt-3 text-base sm:text-lg">
           Physical book metaphors mapped to native desktop primitives.
         </p>
       </div>
 
-      <!-- Bento Grid Layout -->
-      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-12 gap-6" id="dock-port">
+      <!-- Bento Grid Layout: 12-column responsive layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8" id="dock-port">
         <!-- Card 1: Edge Docking & Auto-Tuck (Col 7) -->
-        <div class="lg:col-span-7 bg-paper-white border-2 border-kraft-border p-6 shadow-brutal flex flex-col justify-between">
+        <div class="lg:col-span-7 bg-paper-white border-2 border-kraft-border p-6 sm:p-8 shadow-brutal flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4">
               <span class="font-mono text-xs uppercase tracking-widest font-bold px-2.5 py-0.5 bg-charcoal text-paper-white">
                 SPEC 01
               </span>
               <div class="flex items-center gap-1 bg-paper-subtle border-2 border-kraft-border p-0.5">
-                <button class="px-2.5 py-0.5 font-label text-[10px] uppercase font-bold tracking-wider hover:bg-paper-white transition-colors cursor-pointer" id="dockLeftBtn" onclick="setDockBezel('left')">Left Bezel</button>
-                <button class="px-2.5 py-0.5 bg-charcoal text-paper-white font-label text-[10px] uppercase font-bold tracking-wider transition-colors cursor-pointer" id="dockRightBtn" onclick="setDockBezel('right')">Right Bezel</button>
+                <button class="px-2.5 py-1 font-label text-[10px] uppercase font-bold tracking-wider hover:bg-paper-white transition-colors cursor-pointer" id="dockLeftBtn" onclick="setDockBezel('left')">Left Bezel</button>
+                <button class="px-2.5 py-1 bg-charcoal text-paper-white font-label text-[10px] uppercase font-bold tracking-wider transition-colors cursor-pointer" id="dockRightBtn" onclick="setDockBezel('right')">Right Bezel</button>
               </div>
             </div>
-            <h3 class="font-headline font-bold text-2xl uppercase tracking-tight text-charcoal mb-2">Bezel Docking &amp; Auto-Tuck</h3>
-            <p class="font-body text-sm text-paper-muted mb-6">
+            <h3 class="font-headline font-bold text-2xl sm:text-3xl uppercase tracking-tight text-charcoal mb-2">Bezel Docking &amp; Auto-Tuck</h3>
+            <p class="font-body text-sm sm:text-base text-paper-muted mb-6 leading-relaxed">
               Stashy sleeps flush against your screen edge. Move cursor within 24px of the display boundary to peek at notes; drift away to seamlessly tuck back into an unobtrusive 4px indicator.
             </p>
           </div>
+          
           <!-- Interactive Screen Edge Visualizer -->
-          <div class="relative bg-charcoal border-2 border-kraft-border h-48 flex items-center justify-between px-4 overflow-hidden">
-            <div class="h-28 w-2 bg-[#333] transition-all duration-300" id="bezelLeftIndicator"></div>
-            <div class="text-center font-mono text-xs text-[#a3a3a3]">
-              <span class="block text-[10px] uppercase tracking-widest text-[#737373]">OPTICAL HARDWARE SENSOR</span>
-              <span class="text-canary-yellow font-bold text-sm" id="bezelStatusText">ENGAGED (RIGHT BEZEL)</span>
-              <div class="text-[10px] text-[#737373] mt-2">Dampened spring return: 120ms</div>
+          <div class="relative bg-charcoal border-2 border-kraft-border h-48 sm:h-56 flex items-center justify-between px-6 overflow-hidden">
+            <div class="h-32 w-2.5 bg-[#333] transition-all duration-300" id="bezelLeftIndicator"></div>
+            <div class="text-center font-mono text-xs sm:text-sm text-[#a3a3a3]">
+              <span class="block text-[10px] sm:text-xs uppercase tracking-widest text-[#737373] mb-1">OPTICAL HARDWARE SENSOR</span>
+              <span class="text-canary-yellow font-bold text-sm sm:text-base" id="bezelStatusText">ENGAGED (RIGHT BEZEL)</span>
+              <div class="text-[11px] text-[#737373] mt-2">Dampened spring return: 120ms</div>
             </div>
-            <div class="h-28 w-2 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_10px_#FCD34D]" id="bezelRightIndicator"></div>
+            <div class="h-32 w-2.5 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_12px_#FCD34D]" id="bezelRightIndicator"></div>
           </div>
         </div>
 
         <!-- Card 2: Two-Way Local Markdown Sync (Col 5) -->
-        <div class="lg:col-span-5 bg-paper-white border-2 border-kraft-border p-6 shadow-brutal flex flex-col justify-between">
+        <div class="lg:col-span-5 bg-paper-white border-2 border-kraft-border p-6 sm:p-8 shadow-brutal flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4">
               <span class="font-mono text-xs uppercase tracking-widest font-bold px-2.5 py-0.5 bg-charcoal text-paper-white">
@@ -463,79 +502,79 @@
               </span>
               <span class="font-mono text-[10px] uppercase font-bold text-paper-muted">INOTIFY + FSEVENTS</span>
             </div>
-            <h3 class="font-headline font-bold text-2xl uppercase tracking-tight text-charcoal mb-2">Two-Way Local Sync</h3>
-            <p class="font-body text-sm text-paper-muted mb-6">
+            <h3 class="font-headline font-bold text-2xl sm:text-3xl uppercase tracking-tight text-charcoal mb-2">Two-Way Local Sync</h3>
+            <p class="font-body text-sm sm:text-base text-paper-muted mb-6 leading-relaxed">
               No proprietary clouds. Stashy commits directly to plain <code class="bg-paper-subtle px-1 py-0.5 font-mono text-xs border border-kraft-border">.md</code> files. Edit notes via Neovim, Obsidian vaults, or push them to Git.
             </p>
           </div>
-          <div class="bg-paper-subtle border-2 border-kraft-border p-4 font-mono text-xs space-y-3">
-            <div class="flex items-center justify-between border-b border-paper-subtle-2 pb-2">
+          <div class="bg-paper-subtle border-2 border-kraft-border p-5 font-mono text-xs sm:text-sm space-y-3">
+            <div class="flex items-center justify-between border-b border-paper-subtle-2 pb-2.5">
               <span class="text-paper-muted">VAULT PATH:</span>
               <span class="font-bold text-charcoal">~/.stashy/notes/</span>
             </div>
-            <div class="flex items-center justify-between text-xs">
-              <span class="px-2 py-0.5 bg-canary-yellow border border-kraft-border font-bold text-[10px]">NEOVIM</span>
+            <div class="flex items-center justify-between text-xs sm:text-sm pt-1">
+              <span class="px-2.5 py-1 bg-canary-yellow border border-kraft-border font-bold text-[11px]">NEOVIM</span>
               <span class="material-symbols-outlined text-sm">sync_alt</span>
-              <span class="px-2 py-0.5 bg-lavender-tab border border-kraft-border font-bold text-[10px]">STASHY</span>
+              <span class="px-2.5 py-1 bg-lavender-tab border border-kraft-border font-bold text-[11px]">STASHY</span>
               <span class="material-symbols-outlined text-sm">sync_alt</span>
-              <span class="px-2 py-0.5 bg-mint-tab border border-kraft-border font-bold text-[10px]">OBSIDIAN</span>
+              <span class="px-2.5 py-1 bg-mint-tab border border-kraft-border font-bold text-[11px]">OBSIDIAN</span>
             </div>
-            <p class="text-[10px] text-paper-muted leading-tight">
+            <p class="text-[11px] text-paper-muted leading-tight pt-1">
               Instant sub-millisecond redraw upon external disk writes with zero file locking.
             </p>
           </div>
         </div>
 
         <!-- Card 3: Tactile Color Binders (Col 4) -->
-        <div class="lg:col-span-4 bg-paper-white border-2 border-kraft-border p-6 shadow-brutal flex flex-col justify-between">
+        <div class="lg:col-span-4 bg-paper-white border-2 border-kraft-border p-6 sm:p-8 shadow-brutal flex flex-col justify-between">
           <div>
             <span class="font-mono text-xs uppercase tracking-widest font-bold px-2.5 py-0.5 bg-charcoal text-paper-white">
               SPEC 03
             </span>
             <h3 class="font-headline font-bold text-2xl uppercase tracking-tight text-charcoal mt-4 mb-2">Tactile Color Binders</h3>
-            <p class="font-body text-sm text-paper-muted mb-4">
+            <p class="font-body text-sm text-paper-muted mb-5 leading-relaxed">
               Physical color-coded tabs for separate contexts. Click to preview binder personality:
             </p>
           </div>
           <!-- Color Swatch Interactive Widget -->
           <div class="space-y-4">
-            <div class="flex items-center gap-2">
-              <button class="w-8 h-8 bg-canary-yellow border-2 border-kraft-border shadow-[2px_2px_0px_#171717] hover:-translate-y-0.5 transition-transform cursor-pointer" onclick="changeBinderDemo('#FCD34D', 'Ideas & Architecture')" title="Canary Yellow"></button>
-              <button class="w-8 h-8 bg-coral-tab border-2 border-kraft-border shadow-[2px_2px_0px_#171717] hover:-translate-y-0.5 transition-transform cursor-pointer" onclick="changeBinderDemo('#FDA4AF', 'Daily Work Log')" title="Coral Pink"></button>
-              <button class="w-8 h-8 bg-lavender-tab border-2 border-kraft-border shadow-[2px_2px_0px_#171717] hover:-translate-y-0.5 transition-transform cursor-pointer" onclick="changeBinderDemo('#DDD6FE', 'College Research')" title="Lavender"></button>
-              <button class="w-8 h-8 bg-mint-tab border-2 border-kraft-border shadow-[2px_2px_0px_#171717] hover:-translate-y-0.5 transition-transform cursor-pointer" onclick="changeBinderDemo('#86EFAC', 'Personal Sprints')" title="Mint Green"></button>
-              <button class="w-8 h-8 bg-charcoal border-2 border-kraft-border shadow-[2px_2px_0px_#171717] hover:-translate-y-0.5 transition-transform cursor-pointer" onclick="changeBinderDemo('#171717', 'CLI Scratchpad', true)" title="Bauhaus Ink"></button>
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <button class="w-9 h-9 bg-canary-yellow border-2 border-kraft-border shadow-[2px_2px_0px_#171717] hover:-translate-y-0.5 transition-transform cursor-pointer" onclick="changeBinderDemo('#FCD34D', 'Ideas & Architecture')" title="Canary Yellow"></button>
+              <button class="w-9 h-9 bg-coral-tab border-2 border-kraft-border shadow-[2px_2px_0px_#171717] hover:-translate-y-0.5 transition-transform cursor-pointer" onclick="changeBinderDemo('#FDA4AF', 'Daily Work Log')" title="Coral Pink"></button>
+              <button class="w-9 h-9 bg-lavender-tab border-2 border-kraft-border shadow-[2px_2px_0px_#171717] hover:-translate-y-0.5 transition-transform cursor-pointer" onclick="changeBinderDemo('#DDD6FE', 'College Research')" title="Lavender"></button>
+              <button class="w-9 h-9 bg-mint-tab border-2 border-kraft-border shadow-[2px_2px_0px_#171717] hover:-translate-y-0.5 transition-transform cursor-pointer" onclick="changeBinderDemo('#86EFAC', 'Personal Sprints')" title="Mint Green"></button>
+              <button class="w-9 h-9 bg-charcoal border-2 border-kraft-border shadow-[2px_2px_0px_#171717] hover:-translate-y-0.5 transition-transform cursor-pointer" onclick="changeBinderDemo('#171717', 'CLI Scratchpad', true)" title="Bauhaus Ink"></button>
             </div>
-            <div class="p-3 bg-canary-yellow border-2 border-kraft-border transition-colors duration-200" id="binderDemoBox">
+            <div class="p-4 bg-canary-yellow border-2 border-kraft-border transition-colors duration-200" id="binderDemoBox">
               <span class="font-headline font-bold text-xs uppercase tracking-wider block text-charcoal" id="binderDemoTitle">Ideas &amp; Architecture</span>
-              <span class="font-mono text-[11px] text-paper-muted block mt-1" id="binderDemoText"># binder://ideas_and_architecture.md</span>
+              <span class="font-mono text-xs text-paper-muted block mt-1" id="binderDemoText"># binder://ideas_and_architecture.md</span>
             </div>
           </div>
         </div>
 
         <!-- Card 4: Voice Stash & Smart Markdown (Col 4) -->
-        <div class="lg:col-span-4 bg-paper-white border-2 border-kraft-border p-6 shadow-brutal flex flex-col justify-between">
+        <div class="lg:col-span-4 bg-paper-white border-2 border-kraft-border p-6 sm:p-8 shadow-brutal flex flex-col justify-between">
           <div>
             <span class="font-mono text-xs uppercase tracking-widest font-bold px-2.5 py-0.5 bg-charcoal text-paper-white">
               SPEC 04
             </span>
             <h3 class="font-headline font-bold text-2xl uppercase tracking-tight text-charcoal mt-4 mb-2">Voice Stash Dictation</h3>
-            <p class="font-body text-sm text-paper-muted mb-4">
+            <p class="font-body text-sm text-paper-muted mb-5 leading-relaxed">
               Hold mic shortcut to speak. Audio is captured locally and structured into timestamped markdown:
             </p>
           </div>
-          <div class="bg-paper-subtle border-2 border-kraft-border p-3">
-            <div class="flex items-center justify-between mb-2">
+          <div class="bg-paper-subtle border-2 border-kraft-border p-4">
+            <div class="flex items-center justify-between mb-3">
               <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-swiss-red animate-ping" id="voiceIndicatorPing"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-swiss-red animate-ping" id="voiceIndicatorPing"></span>
                 <span class="font-mono text-[10px] text-swiss-red font-bold uppercase" id="voiceIndicatorStatus">AUDIO STREAMING</span>
               </div>
-              <button class="px-2 py-0.5 bg-charcoal text-paper-white font-mono text-[10px] uppercase font-bold hover:bg-swiss-red transition-colors border border-kraft-border cursor-pointer" onclick="simulateVoiceDictation()">
+              <button class="px-2.5 py-1 bg-charcoal text-paper-white font-mono text-[10px] uppercase font-bold hover:bg-swiss-red transition-colors border border-kraft-border cursor-pointer" onclick="simulateVoiceDictation()">
                 Cycle Audio
               </button>
             </div>
             <!-- Waveform Simulation -->
-            <div class="flex items-end gap-1.5 h-7 py-1 border-b border-kraft-border mb-2" id="waveformBars">
+            <div class="flex items-end gap-1.5 h-8 py-1 border-b border-kraft-border mb-2.5" id="waveformBars">
               <span class="w-1.5 h-3 bg-charcoal animate-pulse"></span>
               <span class="w-1.5 h-5 bg-charcoal animate-pulse delay-75"></span>
               <span class="w-1.5 h-6 bg-swiss-red animate-pulse"></span>
@@ -544,33 +583,33 @@
               <span class="w-1.5 h-5 bg-swiss-red animate-pulse"></span>
               <span class="w-1.5 h-3 bg-charcoal"></span>
             </div>
-            <p class="font-mono text-[11px] text-charcoal min-h-[34px]" id="voiceLiveText">&gt; - [ ] [14:02] Review cargo build flags for target aarch64-apple-darwin</p>
+            <p class="font-mono text-xs text-charcoal min-h-[38px] leading-relaxed" id="voiceLiveText">&gt; - [ ] [14:02] Review cargo build flags for target aarch64-apple-darwin</p>
           </div>
         </div>
 
         <!-- Card 5: Compact Glance vs Full Canvas (Col 4) -->
-        <div class="lg:col-span-4 bg-paper-white border-2 border-kraft-border p-6 shadow-brutal flex flex-col justify-between">
+        <div class="lg:col-span-4 bg-paper-white border-2 border-kraft-border p-6 sm:p-8 shadow-brutal flex flex-col justify-between">
           <div>
             <span class="font-mono text-xs uppercase tracking-widest font-bold px-2.5 py-0.5 bg-charcoal text-paper-white">
               SPEC 05
             </span>
             <h3 class="font-headline font-bold text-2xl uppercase tracking-tight text-charcoal mt-4 mb-2">Compact Glance vs Canvas</h3>
-            <p class="font-body text-sm text-paper-muted mb-4">
+            <p class="font-body text-sm text-paper-muted mb-5 leading-relaxed">
               Switch smoothly between a discrete 40px micro-peek tab or open up the expansive split-pane editor:
             </p>
           </div>
-          <div class="bg-paper-subtle border-2 border-kraft-border p-3 flex flex-col items-center justify-center">
-            <div class="w-full flex items-center justify-around font-mono text-xs mb-2">
+          <div class="bg-paper-subtle border-2 border-kraft-border p-4 flex flex-col items-center justify-center">
+            <div class="w-full flex items-center justify-around font-mono text-xs mb-3">
               <span class="text-charcoal font-bold">40px Tab Peek</span>
               <span class="text-paper-muted font-bold">← VS →</span>
               <span class="text-swiss-red font-bold">420px Dual Canvas</span>
             </div>
-            <div class="w-full h-12 bg-paper-white border-2 border-kraft-border flex items-center px-3 gap-2">
-              <div class="w-6 h-8 bg-canary-yellow border border-kraft-border flex items-center justify-center font-bold text-[10px] overflow-hidden p-0.5">
+            <div class="w-full h-14 bg-paper-white border-2 border-kraft-border flex items-center px-4 gap-3">
+              <div class="w-7 h-9 bg-canary-yellow border border-kraft-border flex items-center justify-center font-bold text-xs overflow-hidden p-0.5">
                 <img src="logo.png" alt="S" class="w-full h-full object-contain" />
               </div>
-              <div class="flex-1 h-2 bg-paper-subtle border border-paper-subtle-2"></div>
-              <span class="material-symbols-outlined text-sm text-charcoal cursor-pointer hover:scale-110 transition-transform" onclick="toggleHeroDock()">open_in_full</span>
+              <div class="flex-1 h-2.5 bg-paper-subtle border border-paper-subtle-2"></div>
+              <span class="material-symbols-outlined text-base text-charcoal cursor-pointer hover:scale-110 transition-transform" onclick="toggleHeroDock()">open_in_full</span>
             </div>
           </div>
         </div>
@@ -579,107 +618,107 @@
   </section>
 
   <!-- PRICING SECTION: "NO SUBSCRIPTION SICKNESS" -->
-  <section class="w-full py-20 bg-paper-subtle border-b-2 border-kraft-border" id="pricing">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12 text-center">
+  <section class="w-full py-20 sm:py-28 bg-paper-subtle border-b-2 border-kraft-border" id="pricing">
+    <div class="site-container text-center">
       <div class="inline-block px-3 py-1 bg-swiss-red text-paper-white font-mono text-xs font-bold uppercase tracking-wider mb-4 border-2 border-kraft-border shadow-brutal">
         SWISS FAIR SOFTWARE CHARTER
       </div>
-      <h2 class="font-headline font-bold text-4xl sm:text-5xl uppercase tracking-tight text-charcoal">
+      <h2 class="font-headline font-bold text-3xl sm:text-5xl lg:text-6xl uppercase tracking-tight text-charcoal">
         Pay once. Own forever. No subscription sickness.
       </h2>
-      <p class="font-body text-base text-paper-muted max-w-2xl mx-auto mt-4">
+      <p class="font-body text-base sm:text-lg text-paper-muted max-w-2xl mx-auto mt-4 leading-relaxed">
         We build tools, not rent-seeking treadmill software. Free tier is genuinely useful forever.
       </p>
 
       <!-- Currency Switcher Pill -->
-      <div class="mt-8 inline-flex items-center p-1 bg-paper-white border-2 border-kraft-border shadow-brutal">
-        <button class="px-4 py-1.5 font-label text-xs uppercase font-bold bg-charcoal text-paper-white tracking-wider transition-colors cursor-pointer" id="currUsdBtn" onclick="switchCurrency('USD')">
+      <div class="mt-8 sm:mt-10 inline-flex items-center p-1 bg-paper-white border-2 border-kraft-border shadow-brutal">
+        <button class="px-5 py-2 font-label text-xs sm:text-sm uppercase font-bold bg-charcoal text-paper-white tracking-wider transition-colors cursor-pointer" id="currUsdBtn" onclick="switchCurrency('USD')">
           USD ($)
         </button>
-        <button class="px-4 py-1.5 font-label text-xs uppercase font-bold text-paper-muted hover:text-charcoal tracking-wider transition-colors cursor-pointer" id="currInrBtn" onclick="switchCurrency('INR')">
+        <button class="px-5 py-2 font-label text-xs sm:text-sm uppercase font-bold text-paper-muted hover:text-charcoal tracking-wider transition-colors cursor-pointer" id="currInrBtn" onclick="switchCurrency('INR')">
           INR (₹)
         </button>
       </div>
 
-      <!-- Pricing Cards -->
-      <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left">
+      <!-- Pricing Cards: Scaled container with balanced padding -->
+      <div class="mt-12 sm:mt-16 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto text-left">
         <!-- Tier 1: Free -->
-        <div class="bg-paper-white border-3 border-kraft-border p-8 flex flex-col justify-between shadow-brutal">
+        <div class="bg-paper-white border-3 border-kraft-border p-6 sm:p-10 flex flex-col justify-between shadow-brutal">
           <div>
             <div class="flex items-center justify-between mb-4">
-              <h3 class="font-headline font-bold text-2xl uppercase tracking-tight text-charcoal">Free Community</h3>
+              <h3 class="font-headline font-bold text-2xl sm:text-3xl uppercase tracking-tight text-charcoal">Free Community</h3>
               <span class="px-2.5 py-0.5 bg-paper-subtle border border-kraft-border font-mono text-xs uppercase font-bold">PERPETUAL</span>
             </div>
             <div class="mb-6">
-              <span class="font-headline font-bold text-5xl tracking-tight text-charcoal">$0</span>
+              <span class="font-headline font-bold text-5xl sm:text-6xl tracking-tight text-charcoal">$0</span>
               <span class="font-mono text-xs text-paper-muted ml-2 uppercase">/ FOREVER FREE</span>
             </div>
-            <ul class="space-y-3 font-body text-sm text-charcoal mb-8">
-              <li class="flex items-center gap-2.5">
-                <span class="material-symbols-outlined text-swiss-red text-lg">check</span>
+            <ul class="space-y-3.5 font-body text-sm sm:text-base text-charcoal mb-8">
+              <li class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-swiss-red text-xl">check</span>
                 <span>Full screen edge docking &amp; auto-tuck</span>
               </li>
-              <li class="flex items-center gap-2.5">
-                <span class="material-symbols-outlined text-swiss-red text-lg">check</span>
+              <li class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-swiss-red text-xl">check</span>
                 <span>All standard tactile binder presets</span>
               </li>
-              <li class="flex items-center gap-2.5">
-                <span class="material-symbols-outlined text-swiss-red text-lg">check</span>
+              <li class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-swiss-red text-xl">check</span>
                 <span>Local Markdown directory sync (<code class="font-mono text-xs">~/.stashy</code>)</span>
               </li>
-              <li class="flex items-center gap-2.5">
-                <span class="material-symbols-outlined text-swiss-red text-lg">check</span>
+              <li class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-swiss-red text-xl">check</span>
                 <span>Patch &amp; security updates forever</span>
               </li>
-              <li class="flex items-center gap-2.5 text-paper-muted">
-                <span class="material-symbols-outlined text-paper-subtle-2 text-lg">close</span>
+              <li class="flex items-center gap-3 text-paper-muted">
+                <span class="material-symbols-outlined text-paper-subtle-2 text-xl">close</span>
                 <span class="line-through">CLI Terminal Daemon (<code class="font-mono text-xs">stashy clip</code>)</span>
               </li>
             </ul>
           </div>
-          <a class="w-full py-4 text-center bg-paper-subtle border-2 border-kraft-border font-label text-xs uppercase tracking-wider font-bold text-charcoal hover:bg-charcoal hover:text-paper-white transition-colors shadow-brutal block" href="#download">
+          <a class="w-full py-4 text-center bg-paper-subtle border-2 border-kraft-border font-label text-xs sm:text-sm uppercase tracking-wider font-bold text-charcoal hover:bg-charcoal hover:text-paper-white transition-colors shadow-brutal block" href="#download">
             Download Free Binary
           </a>
         </div>
 
         <!-- Tier 2: Pro Lifetime -->
-        <div class="bg-charcoal text-paper-white border-3 border-kraft-border p-8 flex flex-col justify-between shadow-brutal-amber relative">
+        <div class="bg-charcoal text-paper-white border-3 border-kraft-border p-6 sm:p-10 flex flex-col justify-between shadow-brutal-amber relative">
           <div class="absolute -top-3.5 right-6 px-3 py-1 bg-canary-yellow text-charcoal font-mono text-[11px] uppercase font-bold border-2 border-kraft-border">
             ONE-TIME PURCHASE • LIFETIME
           </div>
           <div>
             <div class="flex items-center justify-between mb-4">
-              <h3 class="font-headline font-bold text-2xl uppercase tracking-tight text-paper-white">Pro Lifetime</h3>
+              <h3 class="font-headline font-bold text-2xl sm:text-3xl uppercase tracking-tight text-paper-white">Pro Lifetime</h3>
               <span class="px-2.5 py-0.5 bg-swiss-red text-paper-white border border-kraft-border font-mono text-xs uppercase font-bold">POWER CRAFT</span>
             </div>
             <div class="mb-6">
-              <span class="font-headline font-bold text-5xl tracking-tight text-canary-yellow" id="proPriceValue">$3.70</span>
+              <span class="font-headline font-bold text-5xl sm:text-6xl tracking-tight text-canary-yellow" id="proPriceValue">$3.70</span>
               <span class="font-mono text-xs text-[#a3a3a3] ml-2 uppercase">/ ONE-TIME FEE</span>
             </div>
-            <ul class="space-y-3 font-body text-sm text-paper-white mb-8">
-              <li class="flex items-center gap-2.5">
-                <span class="material-symbols-outlined text-canary-yellow text-lg">check</span>
+            <ul class="space-y-3.5 font-body text-sm sm:text-base text-paper-white mb-8">
+              <li class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-canary-yellow text-xl">check</span>
                 <span><strong>Everything in Free</strong>, plus:</span>
               </li>
-              <li class="flex items-center gap-2.5">
-                <span class="material-symbols-outlined text-canary-yellow text-lg">check</span>
+              <li class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-canary-yellow text-xl">check</span>
                 <span>Unlimited custom HEX color binders</span>
               </li>
-              <li class="flex items-center gap-2.5">
-                <span class="material-symbols-outlined text-canary-yellow text-lg">check</span>
+              <li class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-canary-yellow text-xl">check</span>
                 <span>CLI Terminal integration (<code class="font-mono text-xs text-canary-yellow">stashy clip &lt; input</code>)</span>
               </li>
-              <li class="flex items-center gap-2.5">
-                <span class="material-symbols-outlined text-canary-yellow text-lg">check</span>
+              <li class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-canary-yellow text-xl">check</span>
                 <span>Multi-folder &amp; Git repository vault sync</span>
               </li>
-              <li class="flex items-center gap-2.5">
-                <span class="material-symbols-outlined text-canary-yellow text-lg">check</span>
+              <li class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-canary-yellow text-xl">check</span>
                 <span>Global OS chords &amp; early Rust release channels</span>
               </li>
             </ul>
           </div>
-          <button class="w-full py-4 bg-canary-yellow text-charcoal border-2 border-kraft-border font-label text-xs uppercase tracking-wider font-bold hover:bg-paper-white transition-colors shadow-brutal-white cursor-pointer" onclick="openGatewayModal()">
+          <button class="w-full py-4 bg-canary-yellow text-charcoal border-2 border-kraft-border font-label text-xs sm:text-sm uppercase tracking-wider font-bold hover:bg-paper-white transition-colors shadow-brutal-white cursor-pointer" onclick="openGatewayModal()">
             Claim Lifetime License
           </button>
         </div>
@@ -688,52 +727,52 @@
   </section>
 
   <!-- TECHNICAL SPECIFICATIONS & FAQ ACCORDION -->
-  <section class="w-full py-20 bg-alabaster border-b-2 border-kraft-border" id="faq">
-    <div class="max-w-5xl mx-auto px-6 lg:px-12">
-      <div class="text-left mb-12">
+  <section class="w-full py-20 sm:py-28 bg-alabaster border-b-2 border-kraft-border" id="faq">
+    <div class="site-container max-w-5xl">
+      <div class="text-left mb-10 sm:mb-14">
         <span class="font-mono text-xs uppercase tracking-widest text-swiss-red font-bold">• TRANSPARENCY &amp; SPECIFICATIONS</span>
-        <h2 class="font-headline font-bold text-4xl sm:text-5xl uppercase tracking-tight text-charcoal mt-2">
+        <h2 class="font-headline font-bold text-3xl sm:text-5xl uppercase tracking-tight text-charcoal mt-2">
           Frequently Answered Questions
         </h2>
       </div>
       <div class="space-y-4">
         <!-- FAQ 1 -->
         <div class="bg-paper-white border-2 border-kraft-border shadow-brutal">
-          <button class="w-full p-5 text-left font-headline font-bold text-lg uppercase flex items-center justify-between text-charcoal hover:bg-paper-subtle transition-colors cursor-pointer" onclick="toggleFaq('faq-1')">
+          <button class="w-full p-5 sm:p-6 text-left font-headline font-bold text-base sm:text-xl uppercase flex items-center justify-between text-charcoal hover:bg-paper-subtle transition-colors cursor-pointer" onclick="toggleFaq('faq-1')">
             <span>Where are my notes saved on physical disk?</span>
-            <span class="material-symbols-outlined font-bold" id="faq-icon-faq-1">add</span>
+            <span class="material-symbols-outlined font-bold text-xl sm:text-2xl" id="faq-icon-faq-1">add</span>
           </button>
-          <div class="hidden px-5 pb-5 font-body text-sm text-paper-muted border-t border-kraft-border pt-4 leading-relaxed" id="faq-1">
+          <div class="hidden px-5 sm:px-6 pb-6 font-body text-sm sm:text-base text-paper-muted border-t border-kraft-border pt-4 leading-relaxed" id="faq-1">
             Your notes exist as pure plain-text <code class="bg-paper-subtle px-1.5 py-0.5 border border-kraft-border font-mono text-xs text-swiss-red font-bold">.md</code> files located in <code class="bg-paper-subtle px-1.5 py-0.5 border border-kraft-border font-mono text-xs">~/.stashy/notes/</code> on macOS/Linux and <code class="bg-paper-subtle px-1.5 py-0.5 border border-kraft-border font-mono text-xs">%USERPROFILE%\.stashy\notes\</code> on Windows. Zero cloud databases, zero proprietary locking.
           </div>
         </div>
         <!-- FAQ 2 -->
         <div class="bg-paper-white border-2 border-kraft-border shadow-brutal">
-          <button class="w-full p-5 text-left font-headline font-bold text-lg uppercase flex items-center justify-between text-charcoal hover:bg-paper-subtle transition-colors cursor-pointer" onclick="toggleFaq('faq-2')">
+          <button class="w-full p-5 sm:p-6 text-left font-headline font-bold text-base sm:text-xl uppercase flex items-center justify-between text-charcoal hover:bg-paper-subtle transition-colors cursor-pointer" onclick="toggleFaq('faq-2')">
             <span>Does Stashy run background telemetry?</span>
-            <span class="material-symbols-outlined font-bold" id="faq-icon-faq-2">add</span>
+            <span class="material-symbols-outlined font-bold text-xl sm:text-2xl" id="faq-icon-faq-2">add</span>
           </button>
-          <div class="hidden px-5 pb-5 font-body text-sm text-paper-muted border-t border-kraft-border pt-4 leading-relaxed" id="faq-2">
+          <div class="hidden px-5 sm:px-6 pb-6 font-body text-sm sm:text-base text-paper-muted border-t border-kraft-border pt-4 leading-relaxed" id="faq-2">
             No. Stashy has no telemetry, no Google Analytics, no PostHog, and no tracking daemons. The binary makes zero outbound network requests unless you manually check GitHub Releases. It operates completely offline and air-gapped.
           </div>
         </div>
         <!-- FAQ 3 -->
         <div class="bg-paper-white border-2 border-kraft-border shadow-brutal">
-          <button class="w-full p-5 text-left font-headline font-bold text-lg uppercase flex items-center justify-between text-charcoal hover:bg-paper-subtle transition-colors cursor-pointer" onclick="toggleFaq('faq-3')">
+          <button class="w-full p-5 sm:p-6 text-left font-headline font-bold text-base sm:text-xl uppercase flex items-center justify-between text-charcoal hover:bg-paper-subtle transition-colors cursor-pointer" onclick="toggleFaq('faq-3')">
             <span>How does the bezel proximity sensor detect my mouse?</span>
-            <span class="material-symbols-outlined font-bold" id="faq-icon-faq-3">add</span>
+            <span class="material-symbols-outlined font-bold text-xl sm:text-2xl" id="faq-icon-faq-3">add</span>
           </button>
-          <div class="hidden px-5 pb-5 font-body text-sm text-paper-muted border-t border-kraft-border pt-4 leading-relaxed" id="faq-3">
+          <div class="hidden px-5 sm:px-6 pb-6 font-body text-sm sm:text-base text-paper-muted border-t border-kraft-border pt-4 leading-relaxed" id="faq-3">
             Stashy hooks directly into OS display boundary interrupts. Rather than continuous CPU-intensive polling, it listens to native window pointer events. Crossing the boundary fires a physics spring transition.
           </div>
         </div>
         <!-- FAQ 4 -->
         <div class="bg-paper-white border-2 border-kraft-border shadow-brutal">
-          <button class="w-full p-5 text-left font-headline font-bold text-lg uppercase flex items-center justify-between text-charcoal hover:bg-paper-subtle transition-colors cursor-pointer" onclick="toggleFaq('faq-4')">
+          <button class="w-full p-5 sm:p-6 text-left font-headline font-bold text-base sm:text-xl uppercase flex items-center justify-between text-charcoal hover:bg-paper-subtle transition-colors cursor-pointer" onclick="toggleFaq('faq-4')">
             <span>Which operating systems are supported?</span>
-            <span class="material-symbols-outlined font-bold" id="faq-icon-faq-4">add</span>
+            <span class="material-symbols-outlined font-bold text-xl sm:text-2xl" id="faq-icon-faq-4">add</span>
           </button>
-          <div class="hidden px-5 pb-5 font-body text-sm text-paper-muted border-t border-kraft-border pt-4 leading-relaxed" id="faq-4">
+          <div class="hidden px-5 sm:px-6 pb-6 font-body text-sm sm:text-base text-paper-muted border-t border-kraft-border pt-4 leading-relaxed" id="faq-4">
             Windows 10/11 (x64/ARM64), macOS Apple Silicon (M1/M2/M3/M4) &amp; Intel, plus Linux via Flatpak, AppImage, and standard Debian packaging. Binaries are self-contained and weigh under 3 MB.
           </div>
         </div>
@@ -742,25 +781,25 @@
   </section>
 
   <!-- CALL TO ACTION / DOWNLOAD STRIP -->
-  <section class="w-full py-16 bg-canary-yellow border-b-2 border-kraft-border" id="download">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center justify-between gap-8">
-      <div class="text-left">
+  <section class="w-full py-16 sm:py-24 bg-canary-yellow border-b-2 border-kraft-border" id="download">
+    <div class="site-container flex flex-col lg:flex-row items-center justify-between gap-8">
+      <div class="text-left max-w-2xl">
         <span class="font-mono text-xs uppercase font-bold text-charcoal tracking-widest">• IMMEDIATE INSTALLATION</span>
-        <h2 class="font-headline font-bold text-3xl sm:text-4xl uppercase tracking-tight text-charcoal mt-1">
+        <h2 class="font-headline font-bold text-3xl sm:text-5xl uppercase tracking-tight text-charcoal mt-2 leading-tight">
           Reclaim your cognitive memory.
         </h2>
-        <p class="font-body text-sm text-charcoal/80 mt-2 font-medium">
+        <p class="font-body text-sm sm:text-base text-charcoal/80 mt-2 font-medium">
           Zero bloat. Zero telemetry. 100% Rust-powered desktop native speed.
         </p>
       </div>
-      <div class="flex flex-wrap items-center gap-4">
-        <a class="px-8 py-4 bg-charcoal text-paper-white font-label text-xs uppercase font-bold tracking-wider border-2 border-kraft-border shadow-brutal hover:bg-swiss-red hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all" href="https://github.com/frypan05/Stashy-Releases/releases" id="downloadMacBtn" target="_blank" rel="noopener noreferrer">
+      <div class="flex flex-wrap items-center gap-3 sm:gap-4 w-full lg:w-auto">
+        <a class="w-full sm:w-auto text-center px-6 sm:px-8 py-3.5 sm:py-4 bg-charcoal text-paper-white font-label text-xs uppercase font-bold tracking-wider border-2 border-kraft-border shadow-brutal hover:bg-swiss-red hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all" href="https://github.com/frypan05/Stashy-Releases/releases" id="downloadMacBtn" target="_blank" rel="noopener noreferrer">
           Download macOS (.dmg)
         </a>
-        <a class="px-8 py-4 bg-paper-white text-charcoal font-label text-xs uppercase font-bold tracking-wider border-2 border-kraft-border shadow-brutal hover:bg-paper-subtle hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all" href="https://github.com/frypan05/Stashy-Releases/releases" id="downloadWinBtn" target="_blank" rel="noopener noreferrer">
+        <a class="w-full sm:w-auto text-center px-6 sm:px-8 py-3.5 sm:py-4 bg-paper-white text-charcoal font-label text-xs uppercase font-bold tracking-wider border-2 border-kraft-border shadow-brutal hover:bg-paper-subtle hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all" href="https://github.com/frypan05/Stashy-Releases/releases" id="downloadWinBtn" target="_blank" rel="noopener noreferrer">
           Download Windows (.msi)
         </a>
-        <button class="px-5 py-4 bg-transparent text-charcoal font-mono text-xs uppercase font-bold hover:underline cursor-pointer flex items-center gap-1.5" onclick="copyCargoCommand()">
+        <button class="w-full sm:w-auto justify-center px-5 py-3 sm:py-4 bg-transparent text-charcoal font-mono text-xs uppercase font-bold hover:underline cursor-pointer flex items-center gap-1.5" onclick="copyCargoCommand()">
           <span>cargo install stashy-cli</span>
           <span class="material-symbols-outlined text-sm">content_copy</span>
         </button>
@@ -769,8 +808,8 @@
   </section>
 
   <!-- POLISHED BRAND OUTRO -->
-  <section class="w-full py-12 bg-alabaster">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row items-center justify-between gap-6">
+  <section class="w-full py-12 sm:py-16 bg-alabaster">
+    <div class="site-container flex flex-col md:flex-row items-center justify-between gap-6">
       <div class="flex items-center gap-4">
         <!-- Brand Logo mini mark -->
         <div class="w-10 h-10 border-2 border-kraft-border bg-canary-yellow shadow-[2px_2px_0px_#171717] flex items-center justify-center p-1">
@@ -781,7 +820,7 @@
           <span class="font-mono text-xs text-paper-muted block">Tactile Swiss Desktop Engineering.</span>
         </div>
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-4 flex-wrap">
         <a href="https://github.com/frypan05/Stashy-Releases" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 bg-paper-white border-2 border-kraft-border shadow-brutal font-mono text-xs flex items-center gap-2 hover:bg-paper-subtle transition-colors">
           <span class="material-symbols-outlined text-sm text-swiss-red">star</span>
           <span class="font-bold" id="githubStarsCounter">4.9k GitHub Stars</span>
@@ -797,11 +836,11 @@
 
 <!-- FOOTER -->
 <footer class="w-full bg-paper-subtle border-t-2 border-kraft-border">
-  <div class="max-w-7xl mx-auto px-6 lg:px-12 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+  <div class="site-container py-10 flex flex-col md:flex-row items-center justify-between gap-6">
     <div class="flex items-center gap-3">
       <span class="text-xs font-mono uppercase tracking-widest text-paper-muted">© 2026 STASHY LABS. ALL RIGHTS RESERVED.</span>
     </div>
-    <div class="flex flex-wrap items-center gap-6 font-mono text-xs text-paper-muted">
+    <div class="flex flex-wrap items-center gap-4 sm:gap-6 font-mono text-xs text-paper-muted">
       <a class="hover:text-charcoal underline underline-offset-4 decoration-kraft-border transition-colors" href="#benchmarks">SYSTEM STATUS: 100% AIR-GAPPED</a>
       <a class="hover:text-charcoal underline underline-offset-4 decoration-kraft-border transition-colors" href="https://github.com/frypan05/Stashy-Releases" target="_blank" rel="noopener noreferrer">GITHUB RELEASES</a>
       <a class="hover:text-charcoal underline underline-offset-4 decoration-kraft-border transition-colors" href="#faq">NO TELEMETRY CHARTER</a>
@@ -821,7 +860,7 @@
 
 <!-- PAYMENT GATEWAY MODAL (BAUHAUS / NEO-BRUTALIST CHROME) -->
 <div id="gatewayModal" class="gateway-modal-backdrop" aria-hidden="true">
-  <div class="bg-paper-white border-3 border-kraft-border shadow-brutal-xl max-w-lg w-full p-6 relative">
+  <div class="bg-paper-white border-3 border-kraft-border shadow-brutal-xl max-w-lg w-full p-6 sm:p-8 relative">
     <button type="button" class="absolute top-4 right-4 w-8 h-8 border-2 border-kraft-border bg-paper-subtle flex items-center justify-center font-bold text-charcoal hover:bg-swiss-red hover:text-paper-white transition-colors cursor-pointer" onclick="closeGatewayModal()" aria-label="Close modal">&times;</button>
     
     <div class="inline-block px-2.5 py-0.5 bg-canary-yellow text-charcoal border-2 border-kraft-border font-mono text-[10px] uppercase font-bold tracking-wider mb-2">
@@ -917,19 +956,62 @@
     });
   });
 
+  // Mobile Nav Drawer Toggle
+  function toggleMobileNav() {
+    const drawer = document.getElementById('mobileNavDrawer');
+    const icon = document.getElementById('mobileMenuIcon');
+    if (drawer.classList.contains('hidden')) {
+      drawer.classList.remove('hidden');
+      icon.innerText = 'close';
+    } else {
+      drawer.classList.add('hidden');
+      icon.innerText = 'menu';
+    }
+  }
+
+  // Mobile Mockup Tab Switcher (Code vs Dock Note)
+  function switchMobileMockupView(view) {
+    const codeBtn = document.getElementById('mobileCodeTabBtn');
+    const dockBtn = document.getElementById('mobileDockTabBtn');
+    const codePane = document.getElementById('mockupCodePane');
+    const dock = document.getElementById('heroStickyDock');
+
+    if (view === 'dock') {
+      dockBtn.className = "px-2 py-0.5 bg-paper-white text-charcoal font-mono text-[9px] uppercase font-bold";
+      codeBtn.className = "px-2 py-0.5 text-paper-white font-mono text-[9px] uppercase font-bold";
+      codePane.classList.add('hidden');
+      dock.classList.remove('hidden');
+      dock.classList.add('flex', 'w-full', 'static');
+    } else {
+      codeBtn.className = "px-2 py-0.5 bg-paper-white text-charcoal font-mono text-[9px] uppercase font-bold";
+      dockBtn.className = "px-2 py-0.5 text-paper-white font-mono text-[9px] uppercase font-bold";
+      codePane.classList.remove('hidden');
+      dock.classList.add('hidden');
+      dock.classList.remove('flex', 'w-full', 'static');
+    }
+  }
+
   // 1. Hero Dock Tuck & Expand Simulation
   let isTucked = false;
   function toggleHeroDock() {
     const dock = document.getElementById('heroStickyDock');
     const label = document.getElementById('tuckBtnLabel');
     const icon = document.getElementById('tuckIcon');
+    
+    // Check if on wide screen
+    const isDesktop = window.innerWidth >= 1024;
+    
     if (!isTucked) {
-      dock.style.transform = 'translateX(268px)';
+      if (isDesktop) {
+        dock.style.transform = 'translateX(calc(100% - 50px))';
+      } else {
+        dock.style.transform = 'translateY(160px)';
+      }
       label.innerText = 'Expand Note';
       icon.innerText = 'arrow_back';
       isTucked = true;
     } else {
-      dock.style.transform = 'translateX(0px)';
+      dock.style.transform = 'translate(0, 0)';
       label.innerText = 'Tuck to Bezel';
       icon.innerText = 'arrow_forward';
       isTucked = false;
@@ -937,7 +1019,7 @@
   }
 
   // Quick switch color in hero sticky
-  function quickSwitchColor(hex, textColor = '#171717') {
+  function quickSwitchColor(hex) {
     const dock = document.getElementById('heroStickyDock');
     dock.style.backgroundColor = hex;
   }
@@ -965,16 +1047,16 @@
     const status = document.getElementById('bezelStatusText');
 
     if (side === 'left') {
-      leftBtn.className = "px-2.5 py-0.5 bg-charcoal text-paper-white font-label text-[10px] uppercase font-bold tracking-wider transition-colors cursor-pointer";
-      rightBtn.className = "px-2.5 py-0.5 font-label text-[10px] uppercase font-bold tracking-wider hover:bg-paper-white transition-colors cursor-pointer";
-      leftInd.className = "h-28 w-2 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_10px_#FCD34D]";
-      rightInd.className = "h-28 w-2 bg-[#333] transition-all duration-300";
+      leftBtn.className = "px-2.5 py-1 bg-charcoal text-paper-white font-label text-[10px] uppercase font-bold tracking-wider transition-colors cursor-pointer";
+      rightBtn.className = "px-2.5 py-1 font-label text-[10px] uppercase font-bold tracking-wider hover:bg-paper-white transition-colors cursor-pointer";
+      leftInd.className = "h-32 w-2.5 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_12px_#FCD34D]";
+      rightInd.className = "h-32 w-2.5 bg-[#333] transition-all duration-300";
       status.innerText = "ENGAGED (LEFT BEZEL)";
     } else {
-      rightBtn.className = "px-2.5 py-0.5 bg-charcoal text-paper-white font-label text-[10px] uppercase font-bold tracking-wider transition-colors cursor-pointer";
-      leftBtn.className = "px-2.5 py-0.5 font-label text-[10px] uppercase font-bold tracking-wider hover:bg-paper-white transition-colors cursor-pointer";
-      rightInd.className = "h-28 w-2 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_10px_#FCD34D]";
-      leftInd.className = "h-28 w-2 bg-[#333] transition-all duration-300";
+      rightBtn.className = "px-2.5 py-1 bg-charcoal text-paper-white font-label text-[10px] uppercase font-bold tracking-wider transition-colors cursor-pointer";
+      leftBtn.className = "px-2.5 py-1 font-label text-[10px] uppercase font-bold tracking-wider hover:bg-paper-white transition-colors cursor-pointer";
+      rightInd.className = "h-32 w-2.5 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_12px_#FCD34D]";
+      leftInd.className = "h-32 w-2.5 bg-[#333] transition-all duration-300";
       status.innerText = "ENGAGED (RIGHT BEZEL)";
     }
   }
@@ -990,10 +1072,10 @@
 
     if (isDark) {
       title.className = "font-headline font-bold text-xs uppercase tracking-wider block text-paper-white";
-      text.className = "font-mono text-[11px] text-[#a3a3a3] block mt-1";
+      text.className = "font-mono text-xs text-[#a3a3a3] block mt-1";
     } else {
       title.className = "font-headline font-bold text-xs uppercase tracking-wider block text-charcoal";
-      text.className = "font-mono text-[11px] text-paper-muted block mt-1";
+      text.className = "font-mono text-xs text-paper-muted block mt-1";
     }
   }
 
@@ -1027,13 +1109,13 @@
     const modalPrices = document.querySelectorAll('[data-currency-pro]');
 
     if (currency === 'INR') {
-      inrBtn.className = "px-4 py-1.5 font-label text-xs uppercase font-bold bg-charcoal text-paper-white tracking-wider transition-colors cursor-pointer";
-      usdBtn.className = "px-4 py-1.5 font-label text-xs uppercase font-bold text-paper-muted hover:text-charcoal tracking-wider transition-colors cursor-pointer";
+      inrBtn.className = "px-5 py-2 font-label text-xs sm:text-sm uppercase font-bold bg-charcoal text-paper-white tracking-wider transition-colors cursor-pointer";
+      usdBtn.className = "px-5 py-2 font-label text-xs sm:text-sm uppercase font-bold text-paper-muted hover:text-charcoal tracking-wider transition-colors cursor-pointer";
       priceText.innerText = "₹1,279";
       modalPrices.forEach(el => el.innerText = "₹1,279");
     } else {
-      usdBtn.className = "px-4 py-1.5 font-label text-xs uppercase font-bold bg-charcoal text-paper-white tracking-wider transition-colors cursor-pointer";
-      inrBtn.className = "px-4 py-1.5 font-label text-xs uppercase font-bold text-paper-muted hover:text-charcoal tracking-wider transition-colors cursor-pointer";
+      usdBtn.className = "px-5 py-2 font-label text-xs sm:text-sm uppercase font-bold bg-charcoal text-paper-white tracking-wider transition-colors cursor-pointer";
+      inrBtn.className = "px-5 py-2 font-label text-xs sm:text-sm uppercase font-bold text-paper-muted hover:text-charcoal tracking-wider transition-colors cursor-pointer";
       priceText.innerText = "$3.70";
       modalPrices.forEach(el => el.innerText = "$3.70");
     }
@@ -1063,7 +1145,6 @@
     modal.classList.remove('active');
     modal.setAttribute('aria-hidden', 'true');
   }
-  // Close modal when clicking on backdrop
   document.getElementById('gatewayModal').addEventListener('click', function(e) {
     if (e.target === this) {
       closeGatewayModal();
@@ -1115,7 +1196,6 @@
   (function fetchGitHubData() {
     const REPO = "frypan05/Stashy-Releases";
     
-    // Fetch latest release assets
     fetch(`https://api.github.com/repos/${REPO}/releases/latest`)
       .then(res => res.json())
       .then(release => {
@@ -1143,7 +1223,6 @@
       })
       .catch(() => {});
 
-    // Fetch GitHub Stars
     fetch(`https://api.github.com/repos/${REPO}`)
       .then(res => res.json())
       .then(repo => {
