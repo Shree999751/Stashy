@@ -614,20 +614,62 @@
               <span class="font-mono text-[10px] uppercase font-bold text-paper-muted">INOTIFY + FSEVENTS</span>
             </div>
             <h3 class="font-headline font-bold text-lg sm:text-xl uppercase tracking-tight text-charcoal mb-1">Two-Way Local Sync</h3>
-            <p class="font-body text-xs sm:text-sm text-paper-muted mb-4 leading-relaxed">
+            <p class="font-body text-xs sm:text-sm text-paper-muted mb-3 leading-relaxed">
               No proprietary clouds. Stashy commits directly to plain <code class="bg-paper-subtle px-1 py-0.5 font-mono text-xs border border-kraft-border">.md</code> files. Edit notes via Neovim, Obsidian vaults, or push them to Git.
             </p>
+
+            <!-- Technical Highlights Chips -->
+            <div class="flex items-center gap-1.5 flex-wrap my-2.5">
+              <span class="px-2 py-0.5 bg-paper-subtle border border-kraft-border font-mono text-[10px] font-bold text-charcoal">Zero Cloud Lock-in</span>
+              <span class="px-2 py-0.5 bg-paper-subtle border border-kraft-border font-mono text-[10px] font-bold text-charcoal">Atomic Writes</span>
+              <span class="px-2 py-0.5 bg-paper-subtle border border-kraft-border font-mono text-[10px] font-bold text-charcoal">Air-Gapped</span>
+            </div>
+
+            <!-- Live Kernel Event Stream & Disk Watcher Simulation -->
+            <div class="bg-[#181818] border-2 border-kraft-border p-3 my-2.5 font-mono text-xs text-[#d4d4d4] space-y-2">
+              <div class="flex items-center justify-between text-[10px] text-[#737373] border-b border-[#333] pb-1.5">
+                <span class="flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-mint-tab animate-pulse"></span>
+                  <span class="text-paper-white font-bold">KERNEL EVENT STREAM</span>
+                </span>
+                <button class="px-2 py-0.5 bg-charcoal text-canary-yellow border border-kraft-border hover:bg-swiss-red hover:text-paper-white transition-colors cursor-pointer text-[9px] font-bold" onclick="simulateDiskWrite()">
+                  + Simulate Write
+                </button>
+              </div>
+              
+              <div class="space-y-1.5 text-[11px]" id="kernelEventLog">
+                <div class="flex items-center justify-between text-[#86EFAC]">
+                  <span>inotify::MODIFY <span class="text-[#d4d4d4]">architecture.md</span></span>
+                  <span class="text-[9px] text-[#737373]">0.4ms</span>
+                </div>
+                <div class="flex items-center justify-between text-[#7DD3FC]">
+                  <span>obsidian::SAVE <span class="text-[#d4d4d4]">sprint_notes.md</span></span>
+                  <span class="text-[9px] text-[#737373]">1.1ms</span>
+                </div>
+                <div class="flex items-center justify-between text-[#FCD34D]">
+                  <span>stashy::FLUSH <span class="text-[#d4d4d4]">manifesto.md</span></span>
+                  <span class="text-[9px] text-[#737373]">0.2ms</span>
+                </div>
+              </div>
+
+              <div class="pt-1.5 border-t border-[#333] flex items-center justify-between text-[10px] text-[#888]">
+                <span>LOCK STATUS: <strong class="text-mint-tab">LOCK-FREE</strong></span>
+                <span>SYNC TIME: <strong class="text-canary-yellow" id="syncTelemetryTime">&lt; 1.0ms</strong></span>
+              </div>
+            </div>
           </div>
-          <div class="bg-paper-subtle border-2 border-kraft-border p-3.5 font-mono text-xs space-y-2">
+
+          <!-- Vault Path & Sync Pipeline Footer -->
+          <div class="bg-paper-subtle border-2 border-kraft-border p-3.5 font-mono text-xs space-y-2 mt-1">
             <div class="flex items-center justify-between border-b border-paper-subtle-2 pb-1.5">
               <span class="text-paper-muted">VAULT PATH:</span>
               <span class="font-bold text-charcoal">~/.stashy/notes/</span>
             </div>
-            <div class="flex items-center justify-between text-xs pt-1">
+            <div class="flex items-center justify-between text-xs pt-1" id="syncPipelineRow">
               <span class="px-2 py-0.5 bg-canary-yellow border border-kraft-border font-bold text-[10px]">NEOVIM</span>
-              <span class="material-symbols-outlined text-sm">sync_alt</span>
+              <span class="material-symbols-outlined text-sm text-charcoal transition-transform" id="syncArrow1">sync_alt</span>
               <span class="px-2 py-0.5 bg-lavender-tab border border-kraft-border font-bold text-[10px]">STASHY</span>
-              <span class="material-symbols-outlined text-sm">sync_alt</span>
+              <span class="material-symbols-outlined text-sm text-charcoal transition-transform" id="syncArrow2">sync_alt</span>
               <span class="px-2 py-0.5 bg-mint-tab border border-kraft-border font-bold text-[10px]">OBSIDIAN</span>
             </div>
             <p class="text-[10px] text-paper-muted leading-tight pt-1">
@@ -1457,6 +1499,50 @@
       showToast("Spec 01: Dock switched to Bottom Screen Edge");
     }
     updateSpec1Transform();
+  }
+
+  // 8b. SPEC 02 Two-Way Local Sync Simulator
+  const diskWriteDemos = [
+    { source: "neovim::SAVE", file: "architecture.md", time: "0.3ms", color: "#86EFAC" },
+    { source: "obsidian::SYNC", file: "research_notes.md", time: "0.8ms", color: "#7DD3FC" },
+    { source: "fsevents::RELOAD", file: "sprint_retro.md", time: "0.2ms", color: "#FCD34D" },
+    { source: "git::CHECKOUT", file: "project_plan.md", time: "0.5ms", color: "#FDA4AF" },
+    { source: "inotify::MODIFY", file: "todo_bezel.md", time: "0.4ms", color: "#86EFAC" }
+  ];
+  let diskWriteIndex = 0;
+
+  function simulateDiskWrite() {
+    const log = document.getElementById('kernelEventLog');
+    const timeEl = document.getElementById('syncTelemetryTime');
+    const arrow1 = document.getElementById('syncArrow1');
+    const arrow2 = document.getElementById('syncArrow2');
+
+    diskWriteIndex = (diskWriteIndex + 1) % diskWriteDemos.length;
+    const item = diskWriteDemos[diskWriteIndex];
+
+    const newRow = document.createElement('div');
+    newRow.className = "flex items-center justify-between";
+    newRow.style.color = item.color;
+    newRow.innerHTML = `<span>${item.source} <span class="text-[#d4d4d4]">${item.file}</span></span><span class="text-[9px] text-[#737373]">${item.time}</span>`;
+
+    if (log && log.children.length >= 3) {
+      log.removeChild(log.firstElementChild);
+    }
+    if (log) log.appendChild(newRow);
+
+    if (timeEl) timeEl.innerText = item.time;
+
+    // Flash sync arrows
+    if (arrow1 && arrow2) {
+      arrow1.classList.add('text-swiss-red', 'scale-125');
+      arrow2.classList.add('text-canary-yellow', 'scale-125');
+      setTimeout(() => {
+        arrow1.classList.remove('text-swiss-red', 'scale-125');
+        arrow2.classList.remove('text-canary-yellow', 'scale-125');
+      }, 400);
+    }
+
+    showToast(`Spec 02: Captured ${item.source} (${item.file}) in ${item.time}!`);
   }
 
   // 9. Interactive Tactile Color Binder Demo
