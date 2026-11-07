@@ -506,21 +506,24 @@
               <span class="font-mono text-xs uppercase tracking-widest font-bold px-2 py-0.5 bg-charcoal text-paper-white">
                 SPEC 01
               </span>
-              <div class="flex items-center gap-1 bg-paper-subtle border-2 border-kraft-border p-0.5">
-                <button class="px-2.5 py-0.5 font-label text-[10px] uppercase font-bold tracking-wider hover:bg-paper-white transition-colors cursor-pointer" id="dockLeftBtn" onclick="setDockBezel('left')">Left Bezel</button>
-                <button class="px-2.5 py-0.5 bg-charcoal text-paper-white font-label text-[10px] uppercase font-bold tracking-wider transition-colors cursor-pointer" id="dockRightBtn" onclick="setDockBezel('right')">Right Bezel</button>
+              <!-- 4-Edge Bezel Selector Pills (Left, Right, Top, Bottom) -->
+              <div class="flex items-center gap-1 bg-paper-subtle border-2 border-kraft-border p-0.5 flex-wrap">
+                <button class="px-2 py-0.5 font-label text-[10px] uppercase font-bold tracking-wider hover:bg-paper-white transition-colors cursor-pointer" id="dockLeftBtn" onclick="setDockBezel('left')">Left</button>
+                <button class="px-2 py-0.5 bg-charcoal text-paper-white font-label text-[10px] uppercase font-bold tracking-wider transition-colors cursor-pointer" id="dockRightBtn" onclick="setDockBezel('right')">Right</button>
+                <button class="px-2 py-0.5 font-label text-[10px] uppercase font-bold tracking-wider hover:bg-paper-white transition-colors cursor-pointer" id="dockTopBtn" onclick="setDockBezel('top')">Top</button>
+                <button class="px-2 py-0.5 font-label text-[10px] uppercase font-bold tracking-wider hover:bg-paper-white transition-colors cursor-pointer" id="dockBottomBtn" onclick="setDockBezel('bottom')">Bottom</button>
               </div>
             </div>
             <h3 class="font-headline font-bold text-lg sm:text-xl uppercase tracking-tight text-charcoal mb-1">Bezel Docking &amp; Auto-Tuck</h3>
             <p class="font-body text-xs sm:text-sm text-paper-muted mb-4 leading-relaxed">
-              Stashy rests flush against your screen edge. Move cursor within 24px of the display boundary to peek at notes; drift away to seamlessly tuck back into an unobtrusive 4px indicator.
+              Stashy rests flush against any of your 4 screen edges (Left, Right, Top, or Bottom). Move cursor within 24px of the display boundary to peek at notes; drift away to seamlessly tuck back into an unobtrusive 4px indicator.
             </p>
           </div>
           
-          <!-- Interactive Screen Edge Visualizer with Real Tuck to Bezel Note -->
-          <div class="relative bg-[#181818] border-2 border-kraft-border h-64 sm:h-72 overflow-hidden flex flex-col justify-between p-3" id="spec1ScreenContainer">
+          <!-- Interactive Screen Edge Visualizer with 4-Edge Tuck to Bezel Note -->
+          <div class="relative bg-[#181818] border-2 border-kraft-border h-72 sm:h-80 overflow-hidden flex flex-col justify-between p-3 select-none" id="spec1ScreenContainer">
             <!-- Simulated Desktop Top Bar -->
-            <div class="flex items-center justify-between border-b border-[#333] pb-2 text-[10px] font-mono text-[#737373] select-none">
+            <div class="flex items-center justify-between border-b border-[#333] pb-2 text-[10px] font-mono text-[#737373] select-none z-10">
               <div class="flex items-center gap-1.5">
                 <span class="w-2 h-2 rounded-full bg-swiss-red"></span>
                 <span class="w-2 h-2 rounded-full bg-canary-yellow"></span>
@@ -533,17 +536,19 @@
             </div>
 
             <!-- Workspace Ambient Center Status -->
-            <div class="my-auto text-center font-mono select-none pointer-events-none">
+            <div class="my-auto text-center font-mono select-none pointer-events-none z-0">
               <span class="block text-[10px] uppercase tracking-widest text-[#555] mb-0.5">VIRTUAL DESKTOP WORKSPACE</span>
-              <span class="text-xs text-[#888]">Move cursor over edge note or click Tuck</span>
-              <div class="text-[10px] text-[#555] mt-1">Dampened spring return: 120ms • 0 polling loops</div>
+              <span class="text-xs text-[#888]">Hover screen edge to peek • Click Tuck to dismiss</span>
+              <div class="text-[10px] text-[#555] mt-1">Dampened spring return: 120ms • 4-edge hardware interrupt</div>
             </div>
 
-            <!-- Left and Right Edge Optical Indicators -->
-            <div class="absolute left-0 top-10 bottom-3 w-1.5 bg-[#333] transition-all duration-300" id="bezelLeftIndicator"></div>
-            <div class="absolute right-0 top-10 bottom-3 w-1.5 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_10px_#FCD34D]" id="bezelRightIndicator"></div>
+            <!-- 4-Edge Optical Indicators (Left, Right, Top, Bottom) -->
+            <div class="absolute left-0 top-10 bottom-3 w-1.5 bg-[#333] transition-all duration-300 z-10" id="bezelLeftIndicator"></div>
+            <div class="absolute right-0 top-10 bottom-3 w-1.5 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_10px_#FCD34D] z-10" id="bezelRightIndicator"></div>
+            <div class="absolute left-4 right-4 top-8 h-1.5 bg-[#333] transition-all duration-300 z-10" id="bezelTopIndicator"></div>
+            <div class="absolute left-4 right-4 bottom-0 h-1.5 bg-[#333] transition-all duration-300 z-10" id="bezelBottomIndicator"></div>
 
-            <!-- THE SPEC 01 INTERACTIVE TACTILE NOTE (EXACT TUCK TO BEZEL METAPHOR) -->
+            <!-- THE SPEC 01 INTERACTIVE TACTILE NOTE (4-EDGE DOCKING METAPHOR) -->
             <div class="absolute top-10 right-0 h-[190px] w-64 sm:w-72 bg-canary-yellow border-y-2 border-l-2 border-kraft-border shadow-[-3px_3px_0px_#171717] transition-all duration-300 ease-out z-20 flex select-none" id="spec1StickyDock">
               <!-- Tactile Binder Spine with Tabs -->
               <div class="w-8 bg-charcoal flex flex-col items-center py-2 gap-1.5 border-r-2 border-kraft-border select-none shrink-0" id="spec1DockSpine">
@@ -551,7 +556,7 @@
                 <button class="w-4 h-4 bg-coral-tab border border-kraft-border hover:scale-110 transition-transform cursor-pointer" onclick="changeSpec1Color('#FDA4AF', 'Task List')" title="Coral Tab"></button>
                 <button class="w-4 h-4 bg-mint-tab border border-kraft-border hover:scale-110 transition-transform cursor-pointer" onclick="changeSpec1Color('#86EFAC', 'Sync Daemon')" title="Mint Tab"></button>
                 <button class="w-4 h-4 bg-sky-tab border border-kraft-border hover:scale-110 transition-transform cursor-pointer" onclick="changeSpec1Color('#7DD3FC', 'Arch Notes')" title="Sky Tab"></button>
-                <div class="mt-auto [writing-mode:vertical-rl] text-[7px] font-mono tracking-widest text-paper-white/70 uppercase">
+                <div class="mt-auto [writing-mode:vertical-rl] text-[7px] font-mono tracking-widest text-paper-white/70 uppercase" id="spec1SpineText">
                   DOCK
                 </div>
               </div>
@@ -564,7 +569,7 @@
                     <span class="w-2 h-2 rounded-full bg-swiss-red"></span>
                     <span id="spec1NoteTitle">Spec 01 Bezel Dock</span>
                   </span>
-                  <span class="font-mono text-[9px] font-bold text-paper-muted">24px PROX</span>
+                  <span class="font-mono text-[9px] font-bold text-paper-muted" id="spec1ProximityLabel">24px PROX</span>
                 </div>
 
                 <!-- Checklists -->
@@ -579,7 +584,7 @@
                   </label>
                   <label class="flex items-start gap-1.5 cursor-pointer text-[10px] leading-tight select-none">
                     <input class="mt-0.5 accent-charcoal h-3 w-3 border border-kraft-border cursor-pointer task-checkbox" type="checkbox"/>
-                    <span class="font-bold text-charcoal task-text">Auto-tuck 4px indicator</span>
+                    <span class="font-bold text-charcoal task-text" id="spec1TuckRuleText">Auto-tuck 4px indicator</span>
                   </label>
                 </div>
 
@@ -1251,13 +1256,14 @@
     });
   });
 
-  // 8. SPEC 01 Interactive Bezel Docking & Auto-Tuck Engine
-  let spec1CurrentBezel = 'right'; // 'left' or 'right'
+  // 8. SPEC 01 Interactive 4-Edge Bezel Docking & Auto-Tuck Engine (Left, Right, Top, Bottom)
+  let spec1CurrentBezel = 'right'; // 'left' | 'right' | 'top' | 'bottom'
   let spec1IsTucked = false;
 
   function updateSpec1Transform() {
     const dock = document.getElementById('spec1StickyDock');
     const spine = document.getElementById('spec1DockSpine');
+    const spineText = document.getElementById('spec1SpineText');
     const tuckBtn = document.getElementById('spec1TuckBtn');
     const tuckLabel = document.getElementById('spec1TuckLabel');
     const tuckIcon = document.getElementById('spec1TuckIcon');
@@ -1266,11 +1272,14 @@
     if (spec1CurrentBezel === 'right') {
       dock.style.left = 'auto';
       dock.style.right = '0px';
-      dock.style.borderRightWidth = '0px';
-      dock.style.borderLeftWidth = '2px';
+      dock.style.top = '2.5rem';
+      dock.style.bottom = 'auto';
+      dock.style.width = '280px';
+      dock.style.height = '190px';
+      dock.style.borderWidth = '2px 0px 2px 2px';
       dock.style.flexDirection = 'row';
-      spine.style.borderRightWidth = '2px';
-      spine.style.borderLeftWidth = '0px';
+      spine.className = "w-8 bg-charcoal flex flex-col items-center py-2 gap-1.5 border-r-2 border-kraft-border select-none shrink-0";
+      spineText.style.writingMode = 'vertical-rl';
       
       if (spec1IsTucked) {
         dock.style.transform = 'translateX(calc(100% - 32px))';
@@ -1283,14 +1292,17 @@
         tuckIcon.innerText = "arrow_forward";
         statusText.innerText = "ENGAGED (RIGHT BEZEL)";
       }
-    } else {
+    } else if (spec1CurrentBezel === 'left') {
       dock.style.right = 'auto';
       dock.style.left = '0px';
-      dock.style.borderLeftWidth = '0px';
-      dock.style.borderRightWidth = '2px';
+      dock.style.top = '2.5rem';
+      dock.style.bottom = 'auto';
+      dock.style.width = '280px';
+      dock.style.height = '190px';
+      dock.style.borderWidth = '2px 2px 2px 0px';
       dock.style.flexDirection = 'row-reverse';
-      spine.style.borderLeftWidth = '2px';
-      spine.style.borderRightWidth = '0px';
+      spine.className = "w-8 bg-charcoal flex flex-col items-center py-2 gap-1.5 border-l-2 border-kraft-border select-none shrink-0";
+      spineText.style.writingMode = 'vertical-rl';
 
       if (spec1IsTucked) {
         dock.style.transform = 'translateX(calc(-100% + 32px))';
@@ -1302,6 +1314,52 @@
         tuckLabel.innerText = "Tuck to Bezel";
         tuckIcon.innerText = "arrow_back";
         statusText.innerText = "ENGAGED (LEFT BEZEL)";
+      }
+    } else if (spec1CurrentBezel === 'top') {
+      dock.style.left = '50%';
+      dock.style.right = 'auto';
+      dock.style.top = '2rem';
+      dock.style.bottom = 'auto';
+      dock.style.width = '290px';
+      dock.style.height = '180px';
+      dock.style.borderWidth = '0px 2px 2px 2px';
+      dock.style.flexDirection = 'column-reverse';
+      spine.className = "h-7 w-full bg-charcoal flex flex-row items-center justify-between px-3 gap-2 border-t-2 border-kraft-border select-none shrink-0";
+      spineText.style.writingMode = 'horizontal-tb';
+
+      if (spec1IsTucked) {
+        dock.style.transform = 'translate(-50%, calc(-100% + 30px))';
+        tuckLabel.innerText = "Expand Sheet";
+        tuckIcon.innerText = "arrow_downward";
+        statusText.innerText = "TUCKED TO TOP BEZEL (4px PEEK)";
+      } else {
+        dock.style.transform = 'translate(-50%, 0)';
+        tuckLabel.innerText = "Tuck to Bezel";
+        tuckIcon.innerText = "arrow_upward";
+        statusText.innerText = "ENGAGED (TOP BEZEL)";
+      }
+    } else if (spec1CurrentBezel === 'bottom') {
+      dock.style.left = '50%';
+      dock.style.right = 'auto';
+      dock.style.top = 'auto';
+      dock.style.bottom = '0px';
+      dock.style.width = '290px';
+      dock.style.height = '180px';
+      dock.style.borderWidth = '2px 2px 0px 2px';
+      dock.style.flexDirection = 'column';
+      spine.className = "h-7 w-full bg-charcoal flex flex-row items-center justify-between px-3 gap-2 border-b-2 border-kraft-border select-none shrink-0";
+      spineText.style.writingMode = 'horizontal-tb';
+
+      if (spec1IsTucked) {
+        dock.style.transform = 'translate(-50%, calc(100% - 30px))';
+        tuckLabel.innerText = "Expand Sheet";
+        tuckIcon.innerText = "arrow_upward";
+        statusText.innerText = "TUCKED TO BOTTOM BEZEL (4px PEEK)";
+      } else {
+        dock.style.transform = 'translate(-50%, 0)';
+        tuckLabel.innerText = "Tuck to Bezel";
+        tuckIcon.innerText = "arrow_downward";
+        statusText.innerText = "ENGAGED (BOTTOM BEZEL)";
       }
     }
   }
@@ -1316,12 +1374,16 @@
     }
   }
 
-  // Auto-peek on hover for Spec 01
+  // Auto-peek on hover for Spec 01 across all 4 edges
   const spec1DockEl = document.getElementById('spec1StickyDock');
   if (spec1DockEl) {
     spec1DockEl.addEventListener('mouseenter', () => {
       if (spec1IsTucked) {
-        spec1DockEl.style.transform = 'translateX(0)';
+        if (spec1CurrentBezel === 'right' || spec1CurrentBezel === 'left') {
+          spec1DockEl.style.transform = 'translateX(0)';
+        } else {
+          spec1DockEl.style.transform = 'translate(-50%, 0)';
+        }
         const statusText = document.getElementById('bezelStatusText');
         if (statusText) statusText.innerText = `PROXIMITY PEEK (${spec1CurrentBezel.toUpperCase()} BEZEL)`;
       }
@@ -1330,8 +1392,12 @@
       if (spec1IsTucked) {
         if (spec1CurrentBezel === 'right') {
           spec1DockEl.style.transform = 'translateX(calc(100% - 32px))';
-        } else {
+        } else if (spec1CurrentBezel === 'left') {
           spec1DockEl.style.transform = 'translateX(calc(-100% + 32px))';
+        } else if (spec1CurrentBezel === 'top') {
+          spec1DockEl.style.transform = 'translate(-50%, calc(-100% + 30px))';
+        } else if (spec1CurrentBezel === 'bottom') {
+          spec1DockEl.style.transform = 'translate(-50%, calc(100% - 30px))';
         }
         const statusText = document.getElementById('bezelStatusText');
         if (statusText) statusText.innerText = `TUCKED TO ${spec1CurrentBezel.toUpperCase()} BEZEL (4px PEEK)`;
@@ -1351,21 +1417,41 @@
     spec1CurrentBezel = side;
     const leftBtn = document.getElementById('dockLeftBtn');
     const rightBtn = document.getElementById('dockRightBtn');
+    const topBtn = document.getElementById('dockTopBtn');
+    const bottomBtn = document.getElementById('dockBottomBtn');
+
     const leftIndicator = document.getElementById('bezelLeftIndicator');
     const rightIndicator = document.getElementById('bezelRightIndicator');
+    const topIndicator = document.getElementById('bezelTopIndicator');
+    const bottomIndicator = document.getElementById('bezelBottomIndicator');
+
+    // Reset all buttons
+    [leftBtn, rightBtn, topBtn, bottomBtn].forEach(btn => {
+      if (btn) btn.className = "px-2 py-0.5 font-label text-[10px] uppercase font-bold tracking-wider hover:bg-paper-white transition-colors cursor-pointer text-charcoal";
+    });
+
+    // Reset all indicators
+    leftIndicator.className = "absolute left-0 top-10 bottom-3 w-1.5 bg-[#333] transition-all duration-300 z-10";
+    rightIndicator.className = "absolute right-0 top-10 bottom-3 w-1.5 bg-[#333] transition-all duration-300 z-10";
+    topIndicator.className = "absolute left-4 right-4 top-8 h-1.5 bg-[#333] transition-all duration-300 z-10";
+    bottomIndicator.className = "absolute left-4 right-4 bottom-0 h-1.5 bg-[#333] transition-all duration-300 z-10";
 
     if (side === 'left') {
-      leftBtn.className = "px-2.5 py-0.5 bg-charcoal text-paper-white font-label text-[10px] uppercase font-bold tracking-wider transition-colors cursor-pointer";
-      rightBtn.className = "px-2.5 py-0.5 font-label text-[10px] uppercase font-bold tracking-wider hover:bg-paper-white transition-colors cursor-pointer";
-      leftIndicator.className = "absolute left-0 top-10 bottom-3 w-1.5 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_10px_#FCD34D]";
-      rightIndicator.className = "absolute right-0 top-10 bottom-3 w-1.5 bg-[#333] transition-all duration-300";
+      leftBtn.className = "px-2 py-0.5 bg-charcoal text-paper-white font-label text-[10px] uppercase font-bold tracking-wider transition-colors cursor-pointer";
+      leftIndicator.className = "absolute left-0 top-10 bottom-3 w-1.5 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_10px_#FCD34D] z-10";
       showToast("Spec 01: Dock switched to Left Screen Edge");
-    } else {
-      rightBtn.className = "px-2.5 py-0.5 bg-charcoal text-paper-white font-label text-[10px] uppercase font-bold tracking-wider transition-colors cursor-pointer";
-      leftBtn.className = "px-2.5 py-0.5 font-label text-[10px] uppercase font-bold tracking-wider hover:bg-paper-white transition-colors cursor-pointer";
-      rightIndicator.className = "absolute right-0 top-10 bottom-3 w-1.5 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_10px_#FCD34D]";
-      leftIndicator.className = "absolute left-0 top-10 bottom-3 w-1.5 bg-[#333] transition-all duration-300";
+    } else if (side === 'right') {
+      rightBtn.className = "px-2 py-0.5 bg-charcoal text-paper-white font-label text-[10px] uppercase font-bold tracking-wider transition-colors cursor-pointer";
+      rightIndicator.className = "absolute right-0 top-10 bottom-3 w-1.5 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_10px_#FCD34D] z-10";
       showToast("Spec 01: Dock switched to Right Screen Edge");
+    } else if (side === 'top') {
+      topBtn.className = "px-2 py-0.5 bg-charcoal text-paper-white font-label text-[10px] uppercase font-bold tracking-wider transition-colors cursor-pointer";
+      topIndicator.className = "absolute left-4 right-4 top-8 h-1.5 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_10px_#FCD34D] z-10";
+      showToast("Spec 01: Dock switched to Top Screen Edge");
+    } else if (side === 'bottom') {
+      bottomBtn.className = "px-2 py-0.5 bg-charcoal text-paper-white font-label text-[10px] uppercase font-bold tracking-wider transition-colors cursor-pointer";
+      bottomIndicator.className = "absolute left-4 right-4 bottom-0 h-1.5 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_10px_#FCD34D] z-10";
+      showToast("Spec 01: Dock switched to Bottom Screen Edge");
     }
     updateSpec1Transform();
   }
