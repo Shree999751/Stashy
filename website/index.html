@@ -517,15 +517,82 @@
             </p>
           </div>
           
-          <!-- Interactive Screen Edge Visualizer -->
-          <div class="relative bg-charcoal border-2 border-kraft-border h-36 sm:h-40 flex items-center justify-between px-5 overflow-hidden">
-            <div class="h-20 w-2 bg-[#333] transition-all duration-300" id="bezelLeftIndicator"></div>
-            <div class="text-center font-mono text-xs text-[#a3a3a3]">
-              <span class="block text-[10px] uppercase tracking-widest text-[#737373] mb-0.5">OPTICAL SENSOR</span>
-              <span class="text-canary-yellow font-bold text-sm" id="bezelStatusText">ENGAGED (RIGHT BEZEL)</span>
-              <div class="text-[10px] text-[#737373] mt-1">Dampened spring return: 120ms</div>
+          <!-- Interactive Screen Edge Visualizer with Real Tuck to Bezel Note -->
+          <div class="relative bg-[#181818] border-2 border-kraft-border h-64 sm:h-72 overflow-hidden flex flex-col justify-between p-3" id="spec1ScreenContainer">
+            <!-- Simulated Desktop Top Bar -->
+            <div class="flex items-center justify-between border-b border-[#333] pb-2 text-[10px] font-mono text-[#737373] select-none">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-swiss-red"></span>
+                <span class="w-2 h-2 rounded-full bg-canary-yellow"></span>
+                <span class="w-2 h-2 rounded-full bg-mint-tab"></span>
+                <span class="ml-1 text-[#a3a3a3]">display_edge_sensor.rs</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-canary-yellow font-bold uppercase" id="bezelStatusText">ENGAGED (RIGHT BEZEL)</span>
+              </div>
             </div>
-            <div class="h-20 w-2 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_10px_#FCD34D]" id="bezelRightIndicator"></div>
+
+            <!-- Workspace Ambient Center Status -->
+            <div class="my-auto text-center font-mono select-none pointer-events-none">
+              <span class="block text-[10px] uppercase tracking-widest text-[#555] mb-0.5">VIRTUAL DESKTOP WORKSPACE</span>
+              <span class="text-xs text-[#888]">Move cursor over edge note or click Tuck</span>
+              <div class="text-[10px] text-[#555] mt-1">Dampened spring return: 120ms • 0 polling loops</div>
+            </div>
+
+            <!-- Left and Right Edge Optical Indicators -->
+            <div class="absolute left-0 top-10 bottom-3 w-1.5 bg-[#333] transition-all duration-300" id="bezelLeftIndicator"></div>
+            <div class="absolute right-0 top-10 bottom-3 w-1.5 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_10px_#FCD34D]" id="bezelRightIndicator"></div>
+
+            <!-- THE SPEC 01 INTERACTIVE TACTILE NOTE (EXACT TUCK TO BEZEL METAPHOR) -->
+            <div class="absolute top-10 right-0 h-[190px] w-64 sm:w-72 bg-canary-yellow border-y-2 border-l-2 border-kraft-border shadow-[-3px_3px_0px_#171717] transition-all duration-300 ease-out z-20 flex select-none" id="spec1StickyDock">
+              <!-- Tactile Binder Spine with Tabs -->
+              <div class="w-8 bg-charcoal flex flex-col items-center py-2 gap-1.5 border-r-2 border-kraft-border select-none shrink-0" id="spec1DockSpine">
+                <button class="w-4 h-4 bg-canary-yellow border border-kraft-border hover:scale-110 transition-transform cursor-pointer" onclick="changeSpec1Color('#FCD34D', 'Canary Sprint')" title="Canary Yellow"></button>
+                <button class="w-4 h-4 bg-coral-tab border border-kraft-border hover:scale-110 transition-transform cursor-pointer" onclick="changeSpec1Color('#FDA4AF', 'Task List')" title="Coral Tab"></button>
+                <button class="w-4 h-4 bg-mint-tab border border-kraft-border hover:scale-110 transition-transform cursor-pointer" onclick="changeSpec1Color('#86EFAC', 'Sync Daemon')" title="Mint Tab"></button>
+                <button class="w-4 h-4 bg-sky-tab border border-kraft-border hover:scale-110 transition-transform cursor-pointer" onclick="changeSpec1Color('#7DD3FC', 'Arch Notes')" title="Sky Tab"></button>
+                <div class="mt-auto [writing-mode:vertical-rl] text-[7px] font-mono tracking-widest text-paper-white/70 uppercase">
+                  DOCK
+                </div>
+              </div>
+
+              <!-- Note Content Pane -->
+              <div class="flex-1 p-2.5 flex flex-col text-charcoal justify-between" id="spec1NoteBody">
+                <!-- Header -->
+                <div class="flex items-center justify-between border-b-2 border-kraft-border pb-1 mb-1.5">
+                  <span class="font-headline font-bold text-[11px] uppercase tracking-tight flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-swiss-red"></span>
+                    <span id="spec1NoteTitle">Spec 01 Bezel Dock</span>
+                  </span>
+                  <span class="font-mono text-[9px] font-bold text-paper-muted">24px PROX</span>
+                </div>
+
+                <!-- Checklists -->
+                <div class="space-y-1 text-xs font-mono flex-1 overflow-hidden">
+                  <label class="flex items-start gap-1.5 cursor-pointer text-[10px] leading-tight select-none">
+                    <input checked class="mt-0.5 accent-charcoal h-3 w-3 border border-kraft-border cursor-pointer task-checkbox" type="checkbox"/>
+                    <span class="line-through text-paper-muted task-text">Hardware event interrupt</span>
+                  </label>
+                  <label class="flex items-start gap-1.5 cursor-pointer text-[10px] leading-tight select-none">
+                    <input checked class="mt-0.5 accent-charcoal h-3 w-3 border border-kraft-border cursor-pointer task-checkbox" type="checkbox"/>
+                    <span class="line-through text-paper-muted task-text">24px proximity threshold</span>
+                  </label>
+                  <label class="flex items-start gap-1.5 cursor-pointer text-[10px] leading-tight select-none">
+                    <input class="mt-0.5 accent-charcoal h-3 w-3 border border-kraft-border cursor-pointer task-checkbox" type="checkbox"/>
+                    <span class="font-bold text-charcoal task-text">Auto-tuck 4px indicator</span>
+                  </label>
+                </div>
+
+                <!-- Interactive Tuck Button (Exact replica of Hero Tuck to Bezel) -->
+                <div class="pt-1.5 border-t border-kraft-border flex items-center justify-between">
+                  <button class="px-2 py-1 bg-charcoal text-paper-white font-label text-[10px] uppercase font-bold tracking-wider hover:bg-swiss-red transition-colors flex items-center gap-1.5 border border-kraft-border shadow-brutal-xs cursor-pointer" id="spec1TuckBtn" onclick="toggleSpec1Dock()">
+                    <span class="material-symbols-outlined text-[14px]" id="spec1TuckIcon">arrow_forward</span>
+                    <span id="spec1TuckLabel">Tuck to Bezel</span>
+                  </button>
+                  <span class="text-[8px] font-mono text-paper-muted font-bold uppercase tracking-wider">AUTO-DISMISS</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1184,29 +1251,123 @@
     });
   });
 
-  // 8. Interactive Screen Edge Bezel Selector
+  // 8. SPEC 01 Interactive Bezel Docking & Auto-Tuck Engine
+  let spec1CurrentBezel = 'right'; // 'left' or 'right'
+  let spec1IsTucked = false;
+
+  function updateSpec1Transform() {
+    const dock = document.getElementById('spec1StickyDock');
+    const spine = document.getElementById('spec1DockSpine');
+    const tuckBtn = document.getElementById('spec1TuckBtn');
+    const tuckLabel = document.getElementById('spec1TuckLabel');
+    const tuckIcon = document.getElementById('spec1TuckIcon');
+    const statusText = document.getElementById('bezelStatusText');
+
+    if (spec1CurrentBezel === 'right') {
+      dock.style.left = 'auto';
+      dock.style.right = '0px';
+      dock.style.borderRightWidth = '0px';
+      dock.style.borderLeftWidth = '2px';
+      dock.style.flexDirection = 'row';
+      spine.style.borderRightWidth = '2px';
+      spine.style.borderLeftWidth = '0px';
+      
+      if (spec1IsTucked) {
+        dock.style.transform = 'translateX(calc(100% - 32px))';
+        tuckLabel.innerText = "Expand Sheet";
+        tuckIcon.innerText = "arrow_back";
+        statusText.innerText = "TUCKED TO RIGHT BEZEL (4px PEEK)";
+      } else {
+        dock.style.transform = 'translateX(0)';
+        tuckLabel.innerText = "Tuck to Bezel";
+        tuckIcon.innerText = "arrow_forward";
+        statusText.innerText = "ENGAGED (RIGHT BEZEL)";
+      }
+    } else {
+      dock.style.right = 'auto';
+      dock.style.left = '0px';
+      dock.style.borderLeftWidth = '0px';
+      dock.style.borderRightWidth = '2px';
+      dock.style.flexDirection = 'row-reverse';
+      spine.style.borderLeftWidth = '2px';
+      spine.style.borderRightWidth = '0px';
+
+      if (spec1IsTucked) {
+        dock.style.transform = 'translateX(calc(-100% + 32px))';
+        tuckLabel.innerText = "Expand Sheet";
+        tuckIcon.innerText = "arrow_forward";
+        statusText.innerText = "TUCKED TO LEFT BEZEL (4px PEEK)";
+      } else {
+        dock.style.transform = 'translateX(0)';
+        tuckLabel.innerText = "Tuck to Bezel";
+        tuckIcon.innerText = "arrow_back";
+        statusText.innerText = "ENGAGED (LEFT BEZEL)";
+      }
+    }
+  }
+
+  function toggleSpec1Dock() {
+    spec1IsTucked = !spec1IsTucked;
+    updateSpec1Transform();
+    if (spec1IsTucked) {
+      showToast(`Spec 01: Tucked to ${spec1CurrentBezel} screen bezel (hover edge to peek)`);
+    } else {
+      showToast(`Spec 01: Expanded note sheet from ${spec1CurrentBezel} bezel`);
+    }
+  }
+
+  // Auto-peek on hover for Spec 01
+  const spec1DockEl = document.getElementById('spec1StickyDock');
+  if (spec1DockEl) {
+    spec1DockEl.addEventListener('mouseenter', () => {
+      if (spec1IsTucked) {
+        spec1DockEl.style.transform = 'translateX(0)';
+        const statusText = document.getElementById('bezelStatusText');
+        if (statusText) statusText.innerText = `PROXIMITY PEEK (${spec1CurrentBezel.toUpperCase()} BEZEL)`;
+      }
+    });
+    spec1DockEl.addEventListener('mouseleave', () => {
+      if (spec1IsTucked) {
+        if (spec1CurrentBezel === 'right') {
+          spec1DockEl.style.transform = 'translateX(calc(100% - 32px))';
+        } else {
+          spec1DockEl.style.transform = 'translateX(calc(-100% + 32px))';
+        }
+        const statusText = document.getElementById('bezelStatusText');
+        if (statusText) statusText.innerText = `TUCKED TO ${spec1CurrentBezel.toUpperCase()} BEZEL (4px PEEK)`;
+      }
+    });
+  }
+
+  function changeSpec1Color(color, title) {
+    const dock = document.getElementById('spec1StickyDock');
+    const titleEl = document.getElementById('spec1NoteTitle');
+    dock.style.backgroundColor = color;
+    if (titleEl) titleEl.innerText = title;
+    showToast(`Spec 01 Tab: Switched to ${title}`);
+  }
+
   function setDockBezel(side) {
+    spec1CurrentBezel = side;
     const leftBtn = document.getElementById('dockLeftBtn');
     const rightBtn = document.getElementById('dockRightBtn');
     const leftIndicator = document.getElementById('bezelLeftIndicator');
     const rightIndicator = document.getElementById('bezelRightIndicator');
-    const statusText = document.getElementById('bezelStatusText');
 
     if (side === 'left') {
       leftBtn.className = "px-2.5 py-0.5 bg-charcoal text-paper-white font-label text-[10px] uppercase font-bold tracking-wider transition-colors cursor-pointer";
       rightBtn.className = "px-2.5 py-0.5 font-label text-[10px] uppercase font-bold tracking-wider hover:bg-paper-white transition-colors cursor-pointer";
-      leftIndicator.className = "h-20 w-2 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_10px_#FCD34D]";
-      rightIndicator.className = "h-20 w-2 bg-[#333] transition-all duration-300";
-      statusText.innerText = "ENGAGED (LEFT BEZEL)";
-      showToast("Bezel anchored to Left Screen Edge");
+      leftIndicator.className = "absolute left-0 top-10 bottom-3 w-1.5 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_10px_#FCD34D]";
+      rightIndicator.className = "absolute right-0 top-10 bottom-3 w-1.5 bg-[#333] transition-all duration-300";
+      showToast("Spec 01: Dock switched to Left Screen Edge");
     } else {
       rightBtn.className = "px-2.5 py-0.5 bg-charcoal text-paper-white font-label text-[10px] uppercase font-bold tracking-wider transition-colors cursor-pointer";
       leftBtn.className = "px-2.5 py-0.5 font-label text-[10px] uppercase font-bold tracking-wider hover:bg-paper-white transition-colors cursor-pointer";
-      rightIndicator.className = "h-20 w-2 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_10px_#FCD34D]";
-      leftIndicator.className = "h-20 w-2 bg-[#333] transition-all duration-300";
-      statusText.innerText = "ENGAGED (RIGHT BEZEL)";
-      showToast("Bezel anchored to Right Screen Edge");
+      rightIndicator.className = "absolute right-0 top-10 bottom-3 w-1.5 bg-canary-yellow animate-pulse transition-all duration-300 shadow-[0_0_10px_#FCD34D]";
+      leftIndicator.className = "absolute left-0 top-10 bottom-3 w-1.5 bg-[#333] transition-all duration-300";
+      showToast("Spec 01: Dock switched to Right Screen Edge");
     }
+    updateSpec1Transform();
   }
 
   // 9. Interactive Tactile Color Binder Demo
