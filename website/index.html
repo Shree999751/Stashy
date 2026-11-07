@@ -738,29 +738,95 @@
           </div>
         </div>
 
-        <!-- Card 5: Compact Glance (Col 4) -->
+        <!-- Card 5: Compact Glance vs Canvas (Col 4) -->
         <div class="lg:col-span-4 bg-paper-white border-2 border-kraft-border p-5 shadow-brutal flex flex-col justify-between">
           <div>
-            <span class="font-mono text-xs uppercase tracking-widest font-bold px-2 py-0.5 bg-charcoal text-paper-white">
-              SPEC 05
-            </span>
-            <h3 class="font-headline font-bold text-lg uppercase tracking-tight text-charcoal mt-2.5 mb-1">Compact Glance vs Canvas</h3>
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-mono text-xs uppercase tracking-widest font-bold px-2 py-0.5 bg-charcoal text-paper-white">
+                SPEC 05
+              </span>
+              <!-- Dynamic Mode Switcher -->
+              <div class="flex items-center gap-1 bg-paper-subtle border-2 border-kraft-border p-0.5">
+                <button class="px-2 py-0.5 font-label text-[9px] uppercase font-bold tracking-wider bg-charcoal text-paper-white transition-colors cursor-pointer" id="glanceTabBtn" onclick="switchSpec5Mode('glance')">40px Tab</button>
+                <button class="px-2 py-0.5 font-label text-[9px] uppercase font-bold tracking-wider text-charcoal hover:bg-paper-white transition-colors cursor-pointer" id="canvasTabBtn" onclick="switchSpec5Mode('canvas')">420px Canvas</button>
+              </div>
+            </div>
+            <h3 class="font-headline font-bold text-lg uppercase tracking-tight text-charcoal mb-1">Compact Glance vs Canvas</h3>
             <p class="font-body text-xs text-paper-muted mb-3 leading-relaxed">
               Switch smoothly between a discrete 40px micro-peek tab or open up the expansive split-pane editor:
             </p>
           </div>
-          <div class="bg-paper-subtle border-2 border-kraft-border p-3 flex flex-col items-center justify-center">
-            <div class="w-full flex items-center justify-around font-mono text-[10px] mb-2">
-              <span class="text-charcoal font-bold">40px Tab Peek</span>
-              <span class="text-paper-muted font-bold">← VS →</span>
-              <span class="text-swiss-red font-bold">420px Dual Canvas</span>
+
+          <!-- Dynamic Interactive Glance vs Canvas Container -->
+          <div class="bg-paper-subtle border-2 border-kraft-border p-3 flex flex-col justify-between transition-all duration-300 select-none" id="spec5Container">
+            <!-- Mode Header Readout -->
+            <div class="w-full flex items-center justify-between font-mono text-[10px] mb-2 pb-1 border-b border-paper-subtle-2">
+              <span class="text-charcoal font-bold flex items-center gap-1.5" id="spec5ModeTitle">
+                <span class="w-1.5 h-1.5 rounded-full bg-canary-yellow"></span>
+                <span id="spec5ModeLabel">GLANCE PEEK MODE</span>
+              </span>
+              <span class="text-swiss-red font-bold" id="spec5SizeBadge">40px COMPACT</span>
             </div>
-            <div class="w-full h-10 bg-paper-white border border-kraft-border flex items-center px-3 gap-2.5">
-              <div class="w-6 h-6 bg-canary-yellow border border-kraft-border flex items-center justify-center font-bold text-[10px] overflow-hidden p-0.5">
+
+            <!-- View 1: 40px Micro Glance Tab -->
+            <div class="w-full h-11 bg-paper-white border-2 border-kraft-border flex items-center px-2.5 gap-2 shadow-brutal-xs transition-all duration-300 cursor-pointer hover:bg-paper-subtle" id="spec5GlanceView" onclick="switchSpec5Mode('canvas')" title="Click to expand to Dual Canvas">
+              <div class="w-7 h-7 bg-canary-yellow border border-kraft-border flex items-center justify-center font-bold text-[10px] overflow-hidden p-0.5 shrink-0">
                 <img src="logo.png" alt="S" class="w-full h-full object-contain" />
               </div>
-              <div class="flex-1 h-2 bg-paper-subtle border border-paper-subtle-2"></div>
-              <span class="material-symbols-outlined text-sm text-charcoal cursor-pointer hover:scale-110 transition-transform" onclick="toggleHeroDock()">open_in_full</span>
+              <div class="flex-1 overflow-hidden">
+                <div class="font-mono text-[10px] text-charcoal truncate font-bold flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-mint-tab animate-pulse"></span>
+                  <span># architecture.md</span>
+                </div>
+                <div class="font-mono text-[9px] text-paper-muted truncate">
+                  - [x] Rust inotify bypass • 28MB RAM
+                </div>
+              </div>
+              <button class="w-6 h-6 border border-kraft-border bg-paper-subtle hover:bg-canary-yellow flex items-center justify-center transition-colors cursor-pointer shrink-0" onclick="event.stopPropagation(); switchSpec5Mode('canvas')" title="Expand to 420px Dual Canvas">
+                <span class="material-symbols-outlined text-[15px] text-charcoal">open_in_full</span>
+              </button>
+            </div>
+
+            <!-- View 2: 420px Dual Canvas (Editor + Live Render Pane) -->
+            <div class="w-full bg-[#181818] border-2 border-kraft-border p-2.5 font-mono text-xs text-[#d4d4d4] hidden shadow-brutal-xs flex-col gap-2 transition-all duration-300" id="spec5CanvasView">
+              <!-- Top bar inside Canvas -->
+              <div class="flex items-center justify-between border-b border-[#333] pb-1.5 text-[9px] text-[#888]">
+                <div class="flex items-center gap-1.5">
+                  <span class="px-1.5 py-0.2 bg-[#262626] border border-[#444] text-canary-yellow font-bold">RAW .MD</span>
+                  <span>⇄</span>
+                  <span class="px-1.5 py-0.2 bg-[#262626] border border-[#444] text-mint-tab font-bold">PREVIEW</span>
+                </div>
+                <button class="w-5 h-5 border border-[#444] bg-[#222] hover:bg-swiss-red hover:text-paper-white flex items-center justify-center transition-colors cursor-pointer text-[#aaa]" onclick="switchSpec5Mode('glance')" title="Collapse to 40px Glance">
+                  <span class="material-symbols-outlined text-[13px]">close_fullscreen</span>
+                </button>
+              </div>
+
+              <!-- Dual Split Panes -->
+              <div class="grid grid-cols-2 gap-2 text-[10px] leading-snug">
+                <!-- Left Pane: Raw Markdown -->
+                <div class="bg-[#121212] p-1.5 border border-[#333] space-y-1">
+                  <div class="text-[#ff7b72] font-bold"># Sprint Specs</div>
+                  <div class="text-[#79c0ff]">- [x] Zero cloud</div>
+                  <div class="text-[#a3a3a3]">- [ ] Spring curve</div>
+                  <div class="text-[#888] pt-1 text-[8px]">&gt; 2-way sync</div>
+                </div>
+                <!-- Right Pane: Rendered Preview -->
+                <div class="bg-paper-white text-charcoal p-1.5 border border-kraft-border space-y-1">
+                  <div class="font-headline font-bold text-[10px] text-swiss-red uppercase">Sprint Specs</div>
+                  <div class="line-through text-paper-muted flex items-center gap-1">
+                    <span class="text-mint-tab font-bold">✓</span> Zero cloud
+                  </div>
+                  <div class="text-charcoal font-bold flex items-center gap-1">
+                    <span class="w-2 h-2 border border-kraft-border inline-block"></span> Spring curve
+                  </div>
+                  <div class="text-[8px] text-paper-muted pt-1">420px Dual Canvas</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer status hint -->
+            <div class="mt-2 text-center text-[9px] font-mono text-paper-muted">
+              Click buttons or icons to toggle Glance &amp; Canvas
             </div>
           </div>
         </div>
@@ -1576,6 +1642,41 @@
     const textEl = document.getElementById('voiceLiveText');
     textEl.innerText = voiceDemos[voiceIndex];
     showToast("Captured local voice dictation");
+  }
+
+  // 10b. SPEC 05 Interactive Compact Glance vs Canvas Switcher
+  let spec5CurrentMode = 'glance'; // 'glance' | 'canvas'
+
+  function switchSpec5Mode(mode) {
+    spec5CurrentMode = mode;
+    const glanceBtn = document.getElementById('glanceTabBtn');
+    const canvasBtn = document.getElementById('canvasTabBtn');
+    const glanceView = document.getElementById('spec5GlanceView');
+    const canvasView = document.getElementById('spec5CanvasView');
+    const modeLabel = document.getElementById('spec5ModeLabel');
+    const sizeBadge = document.getElementById('spec5SizeBadge');
+
+    if (mode === 'canvas') {
+      glanceBtn.className = "px-2 py-0.5 font-label text-[9px] uppercase font-bold tracking-wider text-charcoal hover:bg-paper-white transition-colors cursor-pointer";
+      canvasBtn.className = "px-2 py-0.5 font-label text-[9px] uppercase font-bold tracking-wider bg-charcoal text-paper-white transition-colors cursor-pointer";
+      glanceView.classList.add('hidden');
+      canvasView.classList.remove('hidden');
+      canvasView.classList.add('flex');
+      modeLabel.innerText = "EXPANDED DUAL CANVAS";
+      sizeBadge.innerText = "420px CANVAS";
+      sizeBadge.className = "text-swiss-red font-bold";
+      showToast("Spec 05: Expanded to 420px Split-Pane Canvas Mode");
+    } else {
+      canvasBtn.className = "px-2 py-0.5 font-label text-[9px] uppercase font-bold tracking-wider text-charcoal hover:bg-paper-white transition-colors cursor-pointer";
+      glanceBtn.className = "px-2 py-0.5 font-label text-[9px] uppercase font-bold tracking-wider bg-charcoal text-paper-white transition-colors cursor-pointer";
+      canvasView.classList.add('hidden');
+      canvasView.classList.remove('flex');
+      glanceView.classList.remove('hidden');
+      modeLabel.innerText = "GLANCE PEEK MODE";
+      sizeBadge.innerText = "40px COMPACT";
+      sizeBadge.className = "text-charcoal font-bold";
+      showToast("Spec 05: Collapsed to 40px Micro Glance Tab");
+    }
   }
 
   // 11. Currency Toggle
